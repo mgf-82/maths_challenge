@@ -207,6 +207,31 @@
     
     .sheet select{width: 120px;}
     .sheet label{font-size: 16px; color:var(--ink)}
+    
+    /* New styling for variable congratulations text */
+    .congrats-text {
+        font-weight: 900;
+        margin-top: 10px;
+        margin-bottom: 10px;
+        line-height: 1.2;
+        text-align: center;
+        text-shadow: 0 0 8px rgba(0, 0, 0, 0.4);
+        color: var(--accent); /* Default color, can be overridden */
+    }
+
+    /* Score metrics styling */
+    .score-metrics {
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+        margin-bottom: 20px;
+        font-size: 16px;
+        color: var(--muted);
+    }
+    .score-metric span:first-child {
+        font-weight: 700;
+        color: var(--ink);
+    }
 
     @keyframes slideUp { 0%{ transform:translateY(40px); opacity:0;} 100%{ transform:translateY(0); opacity:1;} }
 
@@ -388,8 +413,20 @@
   <div id="splash" class="splash" aria-modal="true" role="dialog" aria-labelledby="splashHeading">
     <div class="sheet">
       <h2 id="splashHeading">Time's up</h2>
+      
+      <!-- New detailed score metrics container -->
       <p id="splashMessage">⏰ Time's Up!</p>
-      <p id="splashScore" style="font-weight:700">You got 0 of 0 correct</p>
+      
+      <!-- Congratulations text with size based on accuracy -->
+      <p id="congratsMessage" class="congrats-text" style="font-size: 20px;">Well done!</p>
+
+      <div class="score-metrics">
+          <p class="score-metric"><span>✅ Correct:</span> <span id="correctAnswers">0</span></p>
+          <p class="score-metric"><span>❌ Wrong:</span> <span id="wrongAnswers">0</span></p>
+          <p class="score-metric"><span>🎯 Accuracy:</span> <span id="accuracyScore">0%</span></p>
+          <p class="score-metric"><span>🏆 Stages Reached:</span> <span id="stagesReached">0</span></p>
+      </div>
+
       <div style="display:flex; gap:8px; flex-wrap:wrap">
         <button id="closeSplash" type="button" class="btn danger">Close</button>
         <button id="playAgain" type="button" class="btn primary">Play again</button>
@@ -474,14 +511,13 @@
       function playStreakSound(){ if(!ensureAudio()) return; const n=audioCtx.currentTime;[523.25,659.25,783.99,1046.50].forEach((f,i)=>{const o=audioCtx.createOscillator(),g=audioCtx.createGain();o.connect(g);g.connect(audioCtx.destination);o.frequency.value=f;o.type='triangle';g.gain.setValueAtTime(0,n+i*.08);g.gain.linearRampToValueAtTime(0.12,n+i*.08+.01);g.gain.exponentialRampToValueAtTime(0.01,n+i*.08+.2);o.start(n+i*.08);o.stop(n+i*.08+.2);});}
       function playClickSound(){ if(!ensureAudio()) return; const n=audioCtx.currentTime,o=audioCtx.createOscillator(),g=audioCtx.createGain();o.connect(g);g.connect(audioCtx.destination);o.frequency.value=800;o.type='sine';g.gain.setValueAtTime(0.05,n);g.gain.exponentialRampToValueAtTime(0.01,n+.05);o.start(n);o.stop(n+.05);}
 
-      // DOM (Updated to include settingsModal and settingsBtn)
+      // DOM (Updated to include new splash screen metrics)
       const timer=$('#timer'), counter=$('#counter'), answers=$('#answers'),
             question=$('#question'), feedback=$('#feedback'),
             timeSelect=$('#timeSelect'), modeSelect=$('#modeSelect'),
             splash=$('#splash'), splashMsg=$('#splashMessage'),
-            splashScore=$('#splashScore'), startBtn=$('#startBtn'),
-            pauseBtn=$('#pauseBtn'), resetBtn=$('#resetBtn'),
-            settingsBtn=$('#settingsBtn'), closeSettings=$('#closeSettings'), // New settings elements
+            startBtn=$('#startBtn'), pauseBtn=$('#pauseBtn'), resetBtn=$('#resetBtn'),
+            settingsBtn=$('#settingsBtn'), closeSettings=$('#closeSettings'),
             closeSplash=$('#closeSplash'), playAgain=$('#playAgain'),
             streakChip=$('#streak'), accChip=$('#accuracy'),
             opColor=$('#opColor'), soundToggle=$('#soundToggle'),
@@ -489,6 +525,14 @@
             progressFill=$('#progressFill'), progressLabel=$('#progressLabel'),
             stageCounter=$('#stageCounter'), themeSelect=$('#themeSelect'),
             app=$('.app'), settingsModal=$('#settingsModal');
+            
+      // New splash DOM elements
+      const congratsMessage=$('#congratsMessage');
+      const correctAnswers=$('#correctAnswers');
+      const wrongAnswers=$('#wrongAnswers');
+      const accuracyScore=$('#accuracyScore');
+      const stagesReached=$('#stagesReached');
+
 
       // Utility for debouncing resize events
       function debounce(func, delay){
@@ -550,8 +594,42 @@
       
       // UI Helpers
       function showSplash(){
-        splashMsg.textContent = `⏰ Time's Up!`;
-        splashScore.textContent = `You got ${S.correct} of ${S.total} correct`;
+        const wrong = S.total - S.correct;
+        const accuracy = S.total ? Math.round((S.correct / S.total) * 100) : 0;
+        
+        // 1. Update Metrics
+        correctAnswers.textContent = S.correct;
+        wrongAnswers.textContent = wrong;
+        accuracyScore.textContent = `${accuracy}%`;
+        stagesReached.textContent = S.stages;
+
+        // 2. Set congratulatory message and size
+        let message = 'Keep Practicing!';
+        let fontSize = 20;
+        let color = 'var(--danger)';
+
+        if (accuracy === 100 && S.total > 0) {
+            message = 'PERFECT SCORE! ⭐';
+            fontSize = 48;
+            color = 'var(--accent)';
+        } else if (accuracy >= 80) {
+            message = 'Excellent Work! 🏆';
+            fontSize = 40;
+            color = 'var(--accent)';
+        } else if (accuracy >= 50) {
+            message = 'Great Effort! 🎉';
+            fontSize = 32;
+            color = 'var(--yellow)';
+        } else if (accuracy > 0) {
+            message = 'Good Try!';
+            fontSize = 24;
+            color = 'var(--orange)';
+        }
+
+        congratsMessage.textContent = message;
+        congratsMessage.style.fontSize = `${fontSize}px`;
+        congratsMessage.style.color = color;
+
         splash.classList.add('show');
         splash.focus();
       }
