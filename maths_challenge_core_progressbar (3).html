@@ -7,7 +7,8 @@
   <meta name="color-scheme" content="dark light">
   <style>
     :root{
-      --bg:#0f1220;
+      /* base theme: dark */
+      --bg-gradient: radial-gradient(1200px 1200px at 20% -10%, #1b2040 0%, #0f1220 45%, #0b0e1b 100%);
       --panel:#161a2e;
       --ink:#e7eaf6;
       --muted:#a7aec8;
@@ -19,17 +20,62 @@
       --blue:#4ca3ff;
       --orange:#ffa94d;
       --green:#4cd27d;
+      --border:#242947;
       --vr:20px; /* vertical rhythm */
     }
+
+    /* Light theme */
+    [data-theme='light']{
+      --bg-gradient: radial-gradient(1200px 1200px at 20% -10%, #ffffff 0%, #eef2ff 45%, #e6e9f8 100%);
+      --panel:#ffffff;
+      --ink:#1f2437;
+      --muted:#5a6280;
+      --accent:#3cb371;
+      --accent-2:#2f80ed;
+      --danger:#e74c3c;
+      --yellow:#f1c40f;
+      --purple:#8e44ad;
+      --blue:#2f80ed;
+      --orange:#e67e22;
+      --green:#27ae60;
+      --border:#d7def0;
+    }
+
+    /* Neon theme */
+    [data-theme='neon']{
+      --bg-gradient: radial-gradient(1000px 800px at 40% -20%, #090909 0%, #000 70%, #000 100%);
+      --panel:#0a0a0a;
+      --ink:#eaffea;
+      --muted:#a3a3a3;
+      --accent:#ff00ff;
+      --accent-2:#00ffff;
+      --danger:#ff3b5b;
+      --yellow:#ffff66;
+      --purple:#ff00ff;
+      --blue:#00ffff;
+      --orange:#ff8a33;
+      --green:#39ff14;
+      --border:#1f1f1f;
+    }
+
     *{box-sizing:border-box}
     html,body{height:100%}
     body{
-      margin:0;background:radial-gradient(1200px 1200px at 20% -10%, #1b2040 0%, #0f1220 45%, #0b0e1b 100%);
+      margin:0;background:var(--bg-gradient);
       color:var(--ink); font: 500 16px/1.35 system-ui, -apple-system, Segoe UI, Roboto, Inter, "Helvetica Neue", Arial, "Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol";
       display:grid; place-items:center; padding:16px; overflow:hidden;
     }
-    .app{width:min(980px,100%); background:var(--panel); border:1px solid #242947; border-radius:20px; box-shadow:0 10px 40px rgba(0,0,0,.35); padding:20px}
-    header{display:flex; flex-wrap:wrap; align-items:center; gap:12px; justify-content:space-between; border-bottom:1px dashed #2a315a; padding-bottom:12px}
+    .app{width:min(980px,100%); background:var(--panel); border:1px solid var(--border); border-radius:20px; box-shadow:0 10px 40px rgba(0,0,0,.35); padding:20px}
+    
+    /* --- HEADER AND CONTROL LAYOUT --- */
+    header{
+      display:grid; 
+      grid-template-columns: 1fr auto;
+      align-items:center; 
+      gap: 12px 20px;
+      border-bottom:1px dashed #2a315a; 
+      padding-bottom:12px
+    }
     h1{margin:0; font-weight:800; letter-spacing:.2px; font-size:clamp(20px,3.5vw,28px)}
 
     .copyright{display:flex; align-items:center; gap:10px; font-size:12px; color:var(--muted); line-height:1.3}
@@ -37,16 +83,49 @@
     .copyright a{color:var(--muted); text-decoration:none}
     .copyright a:hover{color:var(--ink)}
 
-    .controls{display:flex; gap:10px; flex-wrap:wrap; align-items:center}
-    .control{display:flex; gap:8px; align-items:center; background:#0f1328; padding:8px 10px; border-radius:12px; border:1px solid #242947}
+    /* Primary Control Row (Mode, Start, Settings) */
+    .controls{
+      grid-column: 1 / -1; /* spans full width below header content */
+      display:flex; gap:10px; flex-wrap:wrap; align-items:center;
+    }
+    
+    /* Mode Selector Styles (More prominent) */
+    #modeControl{
+        flex: 1 1 200px; /* Takes up space, but respects min-width */
+    }
+    #modeControl select{
+        width: 100%;
+        font-size: 18px;
+        padding: 12px 16px;
+        border-width: 2px;
+        border-color: var(--accent-2);
+        background-color: #1d2245; /* dark mode background */
+    }
+    [data-theme='light'] #modeControl select{
+        background-color: #e9eeff;
+    }
+    [data-theme='neon'] #modeControl select{
+        background-color: #121212;
+    }
+
+    /* Smaller controls container */
+    .control{display:flex; gap:8px; align-items:center; background:#0f1328; padding:8px 10px; border-radius:12px; border:1px solid var(--border)}
+    [data-theme='light'] .control{ background:#f4f6ff; }
+    [data-theme='neon'] .control{ background:#0d0d0d; }
+
     label{color:var(--muted); font-size:13px}
     select, .btn, .switch{
       appearance:none; border:1px solid #2a315a; border-radius:10px; font-weight:600; letter-spacing:.2px;
       padding:8px 12px; cursor:pointer; transition:background .2s ease, border-color .2s ease, color .2s ease;
     }
     select{background:#1d2245; color:var(--ink);}
+    [data-theme='light'] select{ background:#e9eeff; }
+    [data-theme='neon'] select{ background:#121212; color:#d6ffe0; }
+
     select:focus-visible, .btn:focus-visible{outline:4px solid var(--accent-2); outline-offset:1px}
     .switch{display:flex; align-items:center; gap:8px; background:#1d2245; color:#fff; user-select:none}
+    [data-theme='light'] .switch{ background:#e9eeff; color:#1f2437; }
+    [data-theme='neon'] .switch{ background:#121212; }
     .switch input{accent-color:var(--accent);}
     .btn{color:#fff; border:none}
     .btn.primary{background:#3cb371}.btn.primary:hover{background:#2e8b57}
@@ -55,14 +134,44 @@
 
     .hud{display:flex; gap:10px; flex-wrap:wrap; align-items:center; margin-top:12px}
     .chip{background:#0e1433; border:1px solid #262e5c; padding:6px 10px; border-radius:999px; color:#cbd2f2; font-weight:700; transition:transform .3s ease, background .3s ease}
+    [data-theme='light'] .chip{ background:#eef2ff; border-color:#d7def0; color:#2b335e; }
+    [data-theme='neon'] .chip{ background:#0d0d0d; border-color:#1f1f1f; color:#b0fff0; }
     .chip.pulse{animation:chipPulse .4s ease;}
     @keyframes chipPulse { 0%,100%{transform:scale(1)} 50%{transform:scale(1.1)} }
 
     #timer{font-variant-numeric:tabular-nums; font-weight:900; font-size:clamp(28px,6vw,40px)}
 
     main{display:grid; gap:16px; padding-top:var(--vr)}
-    .question{display:grid; place-items:center; background:linear-gradient(180deg,#131735,#0e1230); border:1px solid #242947; border-radius:18px; min-height:160px; padding:16px; position:relative; overflow:hidden}
-    .big{font-weight:900; letter-spacing:1px; text-align:center; margin:0; line-height:1.05; white-space:nowrap; overflow:hidden;}
+    .question{display:grid; place-items:center; background:linear-gradient(180deg,#131735,#0e1230); border:1px solid var(--border); border-radius:18px; min-height:160px; padding:16px; position:relative; overflow:hidden}
+    [data-theme='light'] .question{ background:linear-gradient(180deg,#f4f6ff,#e9edff); }
+    [data-theme='neon'] .question{ background:linear-gradient(180deg,#0f0f0f,#0a0a0a); }
+    /* Adjusted .big clamp to start larger, allowing JS to scale up to 140px */
+    .big{
+        font-weight:900; 
+        letter-spacing:1px; 
+        text-align:center; 
+        margin:0; 
+        line-height:1.05; 
+        overflow:hidden;
+        font-size: clamp(32px, 8vw, 140px); /* Start larger */
+        /* Only apply nowrap for actual questions, not the intro text */
+        white-space:nowrap; 
+    }
+    
+    /* === FIX: Set dark color for math text in light theme === */
+    [data-theme='light'] .big {
+        color: #2b335e; /* Matching the dark text color used by the chips/timer */
+    }
+    
+    /* Style specifically for the initial welcome message */
+    .big.welcome {
+        white-space: normal; /* Allow text to wrap for the intro message */
+        font-size: 24px; /* Use a fixed, smaller size for readability */
+        line-height: 1.5;
+        font-weight: 600;
+        letter-spacing: 0.5px;
+        padding: 20px;
+    }
     .op-color{position:absolute; top:10px; right:14px; font-size:20px}
 
     .answers{display:grid; grid-template-columns:repeat(2,1fr); gap:12px}
@@ -72,6 +181,11 @@
     .option:active{transform:scale(.97)}
     .option.correct{background:rgba(76,210,125,.3); border-color:var(--accent); animation:successPulse .5s ease}
     .option.wrong{background:rgba(255,93,108,.25); border-color:var(--danger); animation:shake .4s ease}
+    [data-theme='light'] .option{ background:#e1e7ff; border-color:#9db2ff; color:#1f2437; }
+    [data-theme='light'] .option:hover{ background:#cfdbff; border-color:#7fa0ff; }
+    [data-theme='neon'] .option{ background:#111; border-color:#363636; color:#eaffea; }
+    [data-theme='neon'] .option:hover{ background:#161616; border-color:#4e4e4e; }
+
     @keyframes successPulse { 0%,100%{transform:scale(1)} 50%{transform:scale(1.05); box-shadow:0 0 30px rgba(76,210,125,.6)} }
     @keyframes shake { 0%,100%{transform:translateX(0)} 25%{transform:translateX(-8px)} 75%{transform:translateX(8px)} }
 
@@ -81,11 +195,19 @@
     @keyframes rippleEffect { 0%{ width:0; height:0; opacity:1;} 100%{ width:200px; height:200px; opacity:0;} }
 
     #feedback{min-height:26px; color:var(--muted); font-weight:700; font-size:18px; text-align:center}
+    #feedback.show.correct{ color: var(--accent); }
+    #feedback.show.wrong{ color: var(--danger); }
 
     .splash{position:fixed; inset:0; display:grid; place-items:center; background:rgba(0,0,0,.55); opacity:0; pointer-events:none; transition:opacity .25s ease; z-index:100}
     .splash.show{opacity:1; pointer-events:auto}
     .sheet{width:min(560px,92%); background:var(--panel); border:1px solid #2c3462; border-radius:18px; padding:18px; animation:slideUp .3s ease}
-    .sheet h2{margin:0 0 8px 0}
+    .sheet h2{margin:0 0 16px 0; font-size:24px}
+    .sheet .setting-control{display:flex; justify-content:space-between; align-items:center; margin-bottom:12px; padding:10px 0; border-bottom:1px dashed var(--border)}
+    .sheet .setting-control:last-child{border-bottom:none; margin-bottom:0;}
+    
+    .sheet select{width: 120px;}
+    .sheet label{font-size: 16px; color:var(--ink)}
+
     @keyframes slideUp { 0%{ transform:translateY(40px); opacity:0;} 100%{ transform:translateY(0); opacity:1;} }
 
     /* Progress area with improved spacing */
@@ -99,6 +221,9 @@
       display:grid;
       gap:12px;
     }
+    [data-theme='light'] .progressWrap{ background:#eef2ff; border-color:#d7def0; }
+    [data-theme='neon'] .progressWrap{ background:#0d0d0d; border-color:#1f1f1f; }
+
     .progressHeader{
       display:flex; justify-content:space-between; align-items:center;
       color:var(--muted); font-size:13px; margin:0;
@@ -110,9 +235,15 @@
       position:relative; flex:1; height:22px;
       background:#13183c; border:1px solid #2a315a; border-radius:999px; overflow:hidden
     }
-    .progressFill{position:absolute; left:0; top:0; height:100%; width:0%; background:linear-gradient(90deg, #4cd27d, #4ca3ff); transition:width .25s ease}
+    [data-theme='light'] .progressBar{ background:#dde6ff; border-color:#b9c8ff; }
+    [data-theme='neon'] .progressBar{ background:#121212; border-color:#2a2a2a; }
+
+    .progressFill{position:absolute; left:0; top:0; height:100%; width:0%; background:linear-gradient(90deg, var(--accent), var(--accent-2)); transition:width .25s ease}
     .tickMarks{position:absolute; inset:0; display:flex; justify-content:space-between; pointer-events:none}
     .tickMarks span{width:2px; background:#2f3a7a; opacity:.7}
+    [data-theme='light'] .tickMarks span{ background:#9bb0ff; opacity:.7 }
+    [data-theme='neon'] .tickMarks span{ background:#2f2f2f; opacity:.9 }
+
     .stageChip{
       white-space:nowrap;
       background:linear-gradient(180deg,#1c2350,#12183a);
@@ -127,6 +258,9 @@
       min-width:118px;
       text-align:center;
     }
+    [data-theme='light'] .stageChip{ background:linear-gradient(180deg,#e8edff,#dfe7ff); border-color:#9fb3ff; color:#1f2437; }
+    [data-theme='neon'] .stageChip{ background:linear-gradient(180deg,#121212,#0b0b0b); border-color:#363636; color:#d6ffe0; }
+
     .stageChip.bump{animation:stageBump .4s ease}
     @keyframes stageBump { 0%{transform:scale(1)} 40%{transform:scale(1.12)} 100%{transform:scale(1)} }
 
@@ -138,12 +272,28 @@
       border:1px solid #335a8f; border-radius:12px; padding:8px 12px;
       max-width:92%;
     }
+    [data-theme='light'] .stageBanner{ color:#1f2437; border-color:#a8c0ff; background:linear-gradient(90deg, rgba(60,179,113,.12), rgba(47,128,237,.12)); }
+    [data-theme='neon'] .stageBanner{ color:#d6ffe0; border-color:#2a2a2a; background:linear-gradient(90deg, rgba(255,0,255,.12), rgba(0,255,255,.12)); }
+
     .stageBanner.show{display:block}
 
     @media (max-width:640px){
       .answers{grid-template-columns:1fr}
       .progressRow{flex-direction:column; align-items:stretch; gap:10px}
       .stageChip{align-self:center}
+      .controls{
+          flex-direction: column;
+          align-items: stretch;
+      }
+      #modeControl{
+          flex: 1 1 100%;
+      }
+      .controls .btn:not(#startBtn, #pauseBtn, #resetBtn){
+          flex: 1; /* Make Settings button take full width */
+      }
+      .controls button{
+          flex: 1;
+      }
     }
     @media (prefers-reduced-motion: reduce){ 
       .option, #feedback, .chip, .sheet, .progressFill, .stageChip{transition:none !important; animation:none !important} 
@@ -152,7 +302,7 @@
   </style>
 </head>
 <body>
-  <div class="app" role="application" aria-label="Maths Challenge game">
+  <div class="app" role="application" aria-label="Maths Challenge game" data-theme="dark">
     <header>
       <div class="copyright" aria-label="Ownership and contact">
         <div class="copyright-text">
@@ -162,7 +312,8 @@
       </div>
       <h1>Maths Challenge!</h1>
       <div class="controls" role="group" aria-label="Game controls">
-        <div class="control">
+        <!-- MODE SELECTOR (PROMINENT) -->
+        <div class="control" id="modeControl">
           <label for="modeSelect">Mode</label>
           <select id="modeSelect" aria-label="Difficulty and category">
             <option value="veryEasyAdd">🐣 Tiny — Addition</option>
@@ -180,19 +331,11 @@
             <option value="veryHardPowersRoots">🧠 Genius — Powers & Roots</option>
           </select>
         </div>
-        <div class="control">
-          <label for="timeSelect">Timer</label>
-          <select id="timeSelect" aria-label="Timer length">
-            <option value="1">1 min</option>
-            <option value="2">2 min</option>
-            <option value="3">3 min</option>
-            <option value="4">4 min</option>
-            <option value="5" selected>5 min</option>
-          </select>
-        </div>
-        <label class="switch" for="soundToggle" title="Enable sounds (consent)">
-          <input id="soundToggle" type="checkbox" /> Sound
-        </label>
+        
+        <!-- SETTINGS BUTTON -->
+        <button id="settingsBtn" type="button" class="btn neutral" title="Open Settings">Settings</button>
+
+        <!-- GAME CONTROL BUTTONS -->
         <button id="startBtn" type="button" class="btn primary" title="Space/Enter">Start</button>
         <button id="pauseBtn" type="button" class="btn neutral" title="P">Pause</button>
         <button id="resetBtn" type="button" class="btn danger" title="R">Reset</button>
@@ -213,7 +356,9 @@
         <span id="progressLabel">0 / 5 correct</span>
       </div>
       <div class="progressRow">
-        <div class="progressBar" aria-hidden="true">
+        <div class="progressBar" id="progressBar" role="progressbar"
+             aria-valuemin="0" aria-valuemax="5" aria-valuenow="0"
+             aria-label="Correct answers toward next stage">
           <div class="progressFill" id="progressFill"></div>
           <div class="tickMarks">
             <span></span><span></span><span></span><span></span>
@@ -228,7 +373,10 @@
       <section class="question" aria-labelledby="qLabel">
         <h2 id="qLabel" class="sr-only" style="position:absolute;left:-9999px;top:auto;width:1px;height:1px;overflow:hidden">Question</h2>
         <span id="opColor" class="op-color" aria-hidden="true">+</span>
-        <p id="question" class="big" aria-live="polite">3 + 2 = ?</p>
+        <!-- INITIAL TEXT UPDATED HERE -->
+        <p id="question" class="big welcome" aria-live="polite">
+          1. Select a Mode<br>2. Press Start!<br><br>Hint: You can change the time, colours and turn on sounds in the Settings menu.
+        </p>
       </section>
 
       <div id="feedback" aria-live="polite"></div>
@@ -236,6 +384,7 @@
     </main>
   </div>
 
+  <!-- SPLASH MODAL (Time's Up/Score) -->
   <div id="splash" class="splash" aria-modal="true" role="dialog" aria-labelledby="splashHeading">
     <div class="sheet">
       <h2 id="splashHeading">Time's up</h2>
@@ -248,512 +397,668 @@
     </div>
   </div>
 
+  <!-- SETTINGS MODAL (New) -->
+  <div id="settingsModal" class="splash" aria-modal="true" role="dialog" aria-labelledby="settingsHeading">
+    <div class="sheet">
+      <h2 id="settingsHeading">Game Settings</h2>
+      
+      <div class="setting-control">
+        <label for="timeSelect">Timer Length</label>
+        <select id="timeSelect" aria-label="Timer length">
+          <option value="1">1 min</option>
+          <option value="2">2 min</option>
+          <option value="3">3 min</option>
+          <option value="4">4 min</option>
+          <option value="5" selected>5 min</option>
+        </select>
+      </div>
+
+      <div class="setting-control">
+        <label for="themeSelect">Color Theme</label>
+        <select id="themeSelect" aria-label="Color theme">
+          <option value="dark">Dark</option>
+          <option value="light">Light</option>
+          <option value="neon">Neon</option>
+        </select>
+      </div>
+      
+      <div class="setting-control">
+        <label class="switch" for="soundToggle" title="Enable sounds (consent)" style="background:none; border:none; padding:0;">
+          <input id="soundToggle" type="checkbox" /> Enable Sound Effects
+        </label>
+      </div>
+
+      <div style="display:flex; justify-content:flex-end; margin-top: 20px;">
+        <button id="closeSettings" type="button" class="btn primary">Close</button>
+      </div>
+    </div>
+  </div>
+
   <script>
-    const CHOICES = 4;
-    const DISTRACTORS = 5;
+    (function() { // IIFE added to prevent global variable redeclaration errors
+      const CHOICES = 4;
+      const DISTRACTORS = 5;
+      const HISTORY_SIZE = 10; // New constant for history buffer size
+      // New constant for controlling max font size
+      const MAX_FONT_SIZE = 140; 
+      
+      // Define the welcome message for easy reuse
+      const WELCOME_TEXT = `1. Select a Mode<br>2. Press Start!<br><br>Hint: You can change the time, colours and turn on sounds in the Settings menu.`;
 
-    const $ = (q)=>document.querySelector(q);
-    const $$ = (q)=>Array.from(document.querySelectorAll(q));
-    const randInt = (min,max)=>Math.floor(Math.random()*(max-min+1))+min;
-    const prefersReduce = ()=> window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      const $ = (q)=>document.querySelector(q);
+      const $$ = (q)=>Array.from(document.querySelectorAll(q));
+      const randInt = (min,max)=>Math.floor(Math.random()*(max-min+1))+min;
+      const prefersReduce = ()=> window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-    const S = { running:false, paused:false, end:0, remainingMs:0, correct:0, total:0, time:5, mode:'easyAdd', streak:0, sound:false,
-                stageCorrect:0, stages:0 };
+      // Added S.history to the state object
+      const S = { running:false, paused:false, end:0, remainingMs:0, correct:0, total:0, time:5, mode:'easyAdd', streak:0, sound:false,
+                  stageCorrect:0, stages:0, history: [] };
 
-    // Sound (unchanged)
-    let audioCtx = null;
-    function ensureAudio(){
-      if(!S.sound) return false;
-      try{
-        if(!audioCtx){
-          const Ctx = window.AudioContext || window.webkitAudioContext;
-          if(!Ctx) return false;
-          audioCtx = new Ctx();
-        }
-        return true;
-      }catch(e){ return false; }
-    }
-    function playCorrectSound(){ if(!ensureAudio()) return; const n=audioCtx.currentTime; [523.25,659.25,783.99].forEach((f,i)=>{const o=audioCtx.createOscillator(),g=audioCtx.createGain();o.connect(g);g.connect(audioCtx.destination);o.frequency.value=f;o.type='sine';g.gain.setValueAtTime(0,n+i*.1);g.gain.linearRampToValueAtTime(0.15,n+i*.1+.02);g.gain.exponentialRampToValueAtTime(0.01,n+i*.1+.15);o.start(n+i*.1);o.stop(n+i*.1+.15);});}
-    function playIncorrectSound(){ if(!ensureAudio()) return; const n=audioCtx.currentTime,o=audioCtx.createOscillator(),g=audioCtx.createGain();o.connect(g);g.connect(audioCtx.destination);o.type='square';o.frequency.setValueAtTime(200,n);o.frequency.exponentialRampToValueAtTime(100,n+.15);g.gain.setValueAtTime(0.1,n);g.gain.exponentialRampToValueAtTime(0.01,n+.15);o.start(n);o.stop(n+.15);}
-    function playStartSound(){ if(!ensureAudio()) return; const n=audioCtx.currentTime,o=audioCtx.createOscillator(),g=audioCtx.createGain();o.connect(g);g.connect(audioCtx.destination);o.type='sine';o.frequency.setValueAtTime(400,n);o.frequency.exponentialRampToValueAtTime(800,n+.2);g.gain.setValueAtTime(0.2,n);g.gain.exponentialRampToValueAtTime(0.01,n+.2);o.start(n);o.stop(n+.2);}
-    function playTimeUpSound(){ if(!ensureAudio()) return; const n=audioCtx.currentTime;[0,.15,.3].forEach(d=>{const o=audioCtx.createOscillator(),g=audioCtx.createGain();o.connect(g);g.connect(audioCtx.destination);o.frequency.value=440;o.type='sine';g.gain.setValueAtTime(0.2,n+d);g.gain.exponentialRampToValueAtTime(0.01,n+d+.1);o.start(n+d);o.stop(n+d+.1);});}
-    function playStreakSound(){ if(!ensureAudio()) return; const n=audioCtx.currentTime;[523.25,659.25,783.99,1046.50].forEach((f,i)=>{const o=audioCtx.createOscillator(),g=audioCtx.createGain();o.connect(g);g.connect(audioCtx.destination);o.frequency.value=f;o.type='triangle';g.gain.setValueAtTime(0,n+i*.08);g.gain.linearRampToValueAtTime(0.12,n+i*.08+.01);g.gain.exponentialRampToValueAtTime(0.01,n+i*.08+.2);o.start(n+i*.08);o.stop(n+i*.08+.2);});}
-    function playClickSound(){ if(!ensureAudio()) return; const n=audioCtx.currentTime,o=audioCtx.createOscillator(),g=audioCtx.createGain();o.connect(g);g.connect(audioCtx.destination);o.frequency.value=800;o.type='sine';g.gain.setValueAtTime(0.05,n);g.gain.exponentialRampToValueAtTime(0.01,n+.05);o.start(n);o.stop(n+.05);}
-
-    // DOM
-    const timer=$('#timer'), counter=$('#counter'), answers=$('#answers'),
-          question=$('#question'), feedback=$('#feedback'),
-          timeSelect=$('#timeSelect'), modeSelect=$('#modeSelect'),
-          splash=$('#splash'), splashMsg=$('#splashMessage'),
-          splashScore=$('#splashScore'), startBtn=$('#startBtn'),
-          pauseBtn=$('#pauseBtn'), resetBtn=$('#resetBtn'),
-          closeSplash=$('#closeSplash'), playAgain=$('#playAgain'),
-          streakChip=$('#streak'), accChip=$('#accuracy'),
-          opColor=$('#opColor'), soundToggle=$('#soundToggle'),
-          stagesChip=$('#stages'), stageBanner=$('#stageBanner'),
-          progressFill=$('#progressFill'), progressLabel=$('#progressLabel'),
-          stageCounter=$('#stageCounter');
-
-    // Persistence
-    const LS_KEY = 'mathsChallengeStats';
-    function saveStats(data){
-      try{
-        const prev = JSON.parse(localStorage.getItem(LS_KEY) || '{}');
-        const merged = { ...prev, ...data };
-        localStorage.setItem(LS_KEY, JSON.stringify(merged));
-      }catch(e){ /* ignore */ }
-    }
-    function getStats(){ try{ return JSON.parse(localStorage.getItem(LS_KEY) || '{}'); }catch(e){ return {}; } }
-    function bumpTotals(){
-      const prev = getStats();
-      const totalSolved = (prev.totalSolved||0) + 1;
-      saveStats({ totalSolved, bestStreak: Math.max(prev.bestStreak||0, S.streak) });
-    }
-
-    // Listeners
-    timeSelect.addEventListener('change',()=>{
-      if(S.running){ timeSelect.value = String(S.time); return; }
-      S.time = +timeSelect.value;
-      timer.textContent = `${String(S.time).padStart(2,'0')}:00`;
-    });
-    modeSelect.addEventListener('change',()=>{ S.mode = modeSelect.value; colorOpHint(); });
-    soundToggle.addEventListener('change',()=>{
-      S.sound = soundToggle.checked;
-      saveStats({ sound: S.sound });
-      if(S.sound){ ensureAudio(); }
-    });
-
-    startBtn.addEventListener('click', start);
-    pauseBtn.addEventListener('click', togglePause);
-    resetBtn.addEventListener('click', reset);
-    closeSplash.addEventListener('click', ()=>{ playClickSound(); hideSplash(); });
-    playAgain.addEventListener('click', ()=>{ hideSplash(); start(); });
-
-    // Keyboard shortcuts: 1–4 answers, Space/Enter start, P pause/resume, R reset
-    document.addEventListener('keydown',(e)=>{
-      const k = e.key.toLowerCase();
-      if(k === ' ' || k === 'enter'){
-        if(!S.running || S.paused){ e.preventDefault(); start(); }
-      } else if(k==='r'){ e.preventDefault(); reset(); }
-      else if(k==='p'){ e.preventDefault(); togglePause(); }
-      else if(/^[1-4]$/.test(k)){
-        const i = parseInt(k,10)-1;
-        const btns = $$('#answers .option');
-        if(btns[i]) btns[i].click();
-      }
-    });
-
-    window.addEventListener('resize', debounce(()=> fitOneLine(question, 110, 24), 120));
-
-    function start(){
-      if(S.paused){ // resume
-        S.paused = false;
-        S.running = true;
-        S.end = Date.now() + S.remainingMs;
-        tick();
-        return;
-      }
-      playStartSound();
-      S.running=true; S.paused=false;
-      S.end=Date.now()+S.time*60*1000;
-      S.correct=0; S.total=0; S.streak=0; updateHud();
-      // progress reset
-      S.stageCorrect = 0; S.stages = 0; updateProgressBar(true);
-      stageBanner.classList.remove('show');
-      tick(); nextQ();
-    }
-    function togglePause(){
-      if(!S.running) return;
-      if(!S.paused){
-        S.paused = true; S.running = false;
-        S.remainingMs = Math.max(0, S.end - Date.now());
-        pauseBtn.textContent = 'Resume';
-      }else{
-        S.paused = false; S.running = true;
-        S.end = Date.now() + S.remainingMs;
-        pauseBtn.textContent = 'Pause';
-        tick();
-      }
-    }
-    function reset(){
-      S.running=false; S.paused=false; pauseBtn.textContent='Pause';
-      timer.textContent=`${String(S.time).padStart(2,'0')}:00`;
-      S.correct=0; S.total=0; S.streak=0; updateHud();
-      answers.innerHTML=''; question.textContent='3 + 2 = ?'; opColor.textContent='+';
-      feedback.textContent=''; feedback.className=''; hideSplash();
-      fitOneLine(question, 110, 24);
-      // progress reset
-      S.stageCorrect = 0; S.stages = 0; updateProgressBar(true); stageBanner.classList.remove('show');
-    }
-
-    function tick(){
-      if(!S.running) return;
-      const r=S.end-Date.now();
-      if(r<=0){ 
-        S.running=false; 
-        timer.textContent='00:00'; 
-        playTimeUpSound();
-        showSplash(); 
-        return; 
-      }
-      const m=Math.floor(r/60000), s=Math.floor((r%60000)/1000);
-      timer.textContent=`${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;
-      requestAnimationFrame(tick);
-    }
-
-    function updateHud(){
-      counter.textContent=`Correct: ${S.correct} / ${S.total}`;
-      streakChip.textContent = `Streak: ${S.streak}`;
-      const acc = S.total? Math.round((S.correct/S.total)*100):0;
-      accChip.textContent = `Accuracy: ${acc}%`;
-      counter.classList.add('pulse');
-      setTimeout(()=>counter.classList.remove('pulse'), 400);
-      if(S.streak > 0){
-        streakChip.classList.add('pulse');
-        setTimeout(()=>streakChip.classList.remove('pulse'), 400);
-      }
-      stagesChip.textContent = `Stages: ${S.stages}`;
-    }
-
-    function nextQ(){
-      const q = makeQuestion(S.mode);
-      question.textContent = q.text;
-      colorOpHint(q.op);
-      fitOneLine(question, 110, 24);
-      renderChoices(q.answer, q.distractors);
-    }
-
-    function colorOpHint(op){
-      const map = {'+':'var(--green)','−':'var(--orange)','×':'var(--blue)','÷':'var(--purple)'};
-      opColor.textContent = op || opColor.textContent || '+';
-      opColor.style.color = map[opColor.textContent] || 'var(--yellow)';
-    }
-
-    function makeQuestion(mode){
-      switch(mode){
-        case 'veryEasyAdd':  return genAdd(1,6);
-        case 'veryEasySub':  return genSub(1,6);
-        case 'easyAdd':      return genAdd(1,10);
-        case 'easySub':      return genSub(1,10);
-        case 'mediumAddSub': return randInt(0,1)?genAdd(10,30):genSub(10,30);
-        case 'mediumMul':    return genMul(1,6);
-        case 'mediumFractions': return genFractions();
-        case 'mediumPlaceValue': return genPlaceValue();
-        case 'mediumFracDec': return genFracDecEquiv();
-        case 'hardMulDiv':   return randInt(0,3)===0?genFormula(): (randInt(0,1)?genMul(4,10):genDiv(4,10));
-        case 'veryHardASMD': return genASMDVeryHard();
-        case 'veryHardAlg':  return genAlgebraBasic();
-        case 'veryHardPowersRoots': return genPowersRoots();
-        default:             return genAdd(1,10);
-      }
-    }
-
-    function pack(text, answer, op){ return { text, answer, op, distractors:makeDistractors(answer) }; }
-
-    function genAdd(min,max){ const a=randInt(min,max-1), b=randInt(min,max-1), ans=a+b; return pack(`${a} + ${b} = ?`, ans, '+'); }
-    function genSub(min,max){ let a=randInt(min,max-1), b=randInt(min,max-1); if(b>a)[a,b]=[b,a]; const ans=a-b; return pack(`${a} − ${b} = ?`, ans, '−'); }
-    function genMul(min,max){ const a=randInt(min,max), b=randInt(min,max), ans=a*b; return pack(`${a} × ${b} = ?`, ans, '×'); }
-    function genDiv(min,max){ const a=randInt(min,max), b=randInt(min,max); const dividend=a*b, divisor=a, ans=dividend/divisor; return pack(`${dividend} ÷ ${divisor} = ?`, ans, '÷'); }
-    function genFormula(){ const a=randInt(1,5), b=randInt(1,5), c=randInt(1,5); const add = randInt(0,1)===0; const ans = add ? a*(b+c) : a*(b-c); const op = add ? '+' : '−'; return pack(`${a} × (${b} ${op} ${c}) = ?`, ans, '×'); }
-
-    function genFractions(){
-      const t = randInt(1,8);
-      let text, ans;
-      switch(t){
-        case 1: const n1 = randInt(2,12) * 2; ans = n1/2; text = `What is 1/2 of ${n1}?`; break;
-        case 2: const n2 = randInt(2,8) * 4;  ans = n2/4; text = `What is 1/4 of ${n2}?`; break;
-        case 3: const n3 = randInt(2,6) * 8;  ans = n3/8; text = `What is 1/8 of ${n3}?`; break;
-        case 4: const n4 = randInt(2,10)* 3;  ans = n4/3; text = `What is 1/3 of ${n4}?`; break;
-        case 5: const a1 = randInt(1,2), a2 = randInt(1,3);
-                if(a1 + a2 <= 4){ ans=a1+a2; text = `${a1}/4 + ${a2}/4 = ?/4`; }
-                else { ans=a1+a2; text = `${a1}/8 + ${a2}/8 = ?/8`; } break;
-        case 6: const s1 = randInt(2,4), s2 = randInt(1,s1-1);
-                ans = s1 - s2; text = `${s1}/4 − ${s2}/4 = ?/4`; break;
-        case 7: const mult = randInt(2,3); const denom = [2,4,8][randInt(0,2)]; const whole = randInt(3,8)*denom;
-                ans = (whole/denom)*mult; text = `What is ${mult}/${denom} of ${whole}?`; break;
-        case 8: const wholes = randInt(2,6); const frac = [2,4][randInt(0,1)];
-                ans = wholes * frac; text = `How many 1/${frac} in ${wholes}?`; break;
-      }
-      return pack(text, ans, '+');
-    }
-    function genFracDecEquiv(){
-      const t = randInt(1,8);
-      let text, ans;
-      switch(t){
-        case 1: ans=2; text = `1/2 = ?/4`; break;
-        case 2: ans=4; text = `1/2 = ?/8`; break;
-        case 3: ans=2; text = `1/4 = ?/8`; break;
-        case 4: ans=4; text = `2/4 = ?/8`; break;
-        case 5: ans=2; text = `1/3 = ?/6`; break;
-        case 6: ans=4; text = `2/3 = ?/6`; break;
-        case 7: const addProblems = [
-                {text: '1/4 + 1/4 = ?/4', ans: 2},
-                {text: '1/8 + 2/8 = ?/8', ans: 3},
-                {text: '2/4 + 1/4 = ?/4', ans: 3},
-                {text: '1/2 + 1/2 = ?/2', ans: 2},
-                {text: '3/8 + 2/8 = ?/8', ans: 5},
-              ]; const pick = addProblems[randInt(0, addProblems.length-1)]; text = pick.text; ans = pick.ans; break;
-        case 8: const convProblems = [
-                {text: '1/2 + 1/4 = ?/4', ans: 3},
-                {text: '1/2 + 1/8 = ?/8', ans: 5},
-                {text: '1/4 + 1/8 = ?/8', ans: 3},
-                {text: '1/2 + 2/8 = ?/8', ans: 6},
-                {text: '1/3 + 1/6 = ?/6', ans: 3},
-              ]; const pick2 = convProblems[randInt(0, convProblems.length-1)]; text = pick2.text; ans = pick2.ans; break;
-      }
-      return pack(text, ans, '+');
-    }
-    function genPlaceValue(){
-      const t = randInt(1,8);
-      let text, ans;
-      switch(t){
-        case 1: const p1 = randInt(1000, 9999); ans = Math.floor((p1 % 1000) / 100); text = `In ${p1}, what digit is in the hundreds place?`; break;
-        case 2: const p2 = randInt(100, 9999);  ans = Math.floor((p2 % 100) / 10);  text = `In ${p2}, what digit is in the tens place?`; break;
-        case 3: const p3 = randInt(1000, 9999);
-                const places = [
-                  {name: 'thousands', val: Math.floor(p3/1000) * 1000},
-                  {name: 'hundreds',  val: Math.floor((p3%1000)/100) * 100},
-                  {name: 'tens',      val: Math.floor((p3%100)/10) * 10}
-                ];
-                const picked = places[randInt(0, 2)];
-                ans = picked.val; text = `In ${p3}, what is the value of the ${picked.name} place?`; break;
-        case 4:
-                const a = randInt(1000, 9999), b = randInt(1000, 9999);
-                if(a === b){
-                  const bump = a + randInt(1,100);
-                  ans = Math.max(a, bump);
-                  text = `Which is bigger: ${a} or ${bump}?`;
-                }else{
-                  ans = Math.max(a,b);
-                  text = `Which is bigger: ${a} or ${b}?`;
-                }
-                break;
-        case 5:
-                const c = randInt(1000, 9999), d = randInt(1000, 9999);
-                if(c === d){
-                  const lower = c - randInt(1,100);
-                  ans = Math.min(c, lower);
-                  text = `Which is smaller: ${c} or ${lower}?`;
-                }else{
-                  ans = Math.min(c, d);
-                  text = `Which is smaller: ${c} or ${d}?`;
-                }
-                break;
-        case 6: const p6 = randInt(1000, 9998); ans = p6 + 1; text = `What number comes after ${p6}?`; break;
-        case 7: const p7 = randInt(1001, 9999); ans = p7 - 1; text = `What number comes before ${p7}?`; break;
-        case 8: const p8 = randInt(1050, 9950); const rem = p8 % 100; ans = rem >= 50 ? p8 + (100 - rem) : p8 - rem; text = `Round ${p8} to the nearest hundred`; break;
-      }
-      return pack(text, ans, '+');
-    }
-    function genPowersRoots(){
-      const t = randInt(1,6);
-      let text, ans;
-      switch(t){
-        case 1: const b1 = randInt(1,12); ans = b1*b1; text = `${b1}² = ?`; break;
-        case 2: const r = randInt(1,12);  ans = r;     text = `√${r*r} = ?`; break;
-        case 3: const b2 = randInt(1,5);  ans = b2*b2*b2; text = `${b2}³ = ?`; break;
-        case 4: const cr = randInt(1,5);  ans = cr;    text = `∛${cr*cr*cr} = ?`; break;
-        case 5: const e2 = randInt(1,8);  ans = Math.pow(2,e2); text = `2^${e2} = ?`; break;
-        case 6: const e10= randInt(1,4);  ans = Math.pow(10,e10); text = `10^${e10} = ?`; break;
-      }
-      return pack(text, ans, '+');
-    }
-    function genASMDVeryHard(){
-      const t = randInt(1,8);
-      let a,b,c,ans,text;
-      switch(t){
-        case 1: a = randInt(20,99); b = randInt(20,99); ans = a + b; text = `${a} + ${b} = ?`; break;
-        case 2: a = randInt(40,150); b = randInt(20,99); if(b>a) [a,b]=[b,a]; ans = a - b; text = `${a} − ${b} = ?`; break;
-        case 3: a = randInt(7,12); b = randInt(7,12); ans = a * b; text = `${a} × ${b} = ?`; break;
-        case 4: a = randInt(7,12); b = randInt(7,12); ans = b; text = `${a*b} ÷ ${a} = ?`; break;
-        case 5: a = randInt(4,12); b = randInt(4,12); c = randInt(10,99); ans = a*b + c; text = `${a} × ${b} + ${c} = ?`; break;
-        case 6: a = randInt(4,12); b = randInt(4,12); const prod = a*b; c = randInt(0, Math.min(99, prod)); ans = prod - c; text = `${a} × ${b} − ${c} = ?`; break;
-        case 7: a = randInt(10,30); b = randInt(10,30); c = randInt(2,9); ans = (a + b) * c; text = `(${a} + ${b}) × ${c} = ?`; break;
-        case 8: a = randInt(20,40); b = randInt(10,20); if(b>a) [a,b]=[b,a]; c = randInt(2,9); ans = (a - b) * c; text = `(${a} − ${b}) × ${c} = ?`; break;
-      }
-      return pack(text, ans, '+');
-    }
-    function genAlgebraBasic(){
-      const t = randInt(1,8);
-      let x,a,b,c,text,ans;
-      switch(t){
-        case 1: x = randInt(1,12); a = randInt(1,12); b = x + a; text = `Solve: x + ${a} = ${b}`; ans = x; break;
-        case 2: a = randInt(1,10); x = randInt(a+1,a+12); b = x - a; text = `Solve: x − ${a} = ${b}`; ans = x; break;
-        case 3: a = randInt(2,12); x = randInt(1,10); b = a * x; text = `Solve: ${a}x = ${b}`; ans = x; break;
-        case 4: a = randInt(2,9); x = randInt(1,10); b = randInt(0,9); c = a*x + b; text = `Solve: ${a}x + ${b} = ${c}`; ans = x; break;
-        case 5: b = randInt(2,6); a = randInt(0,9); const result5 = randInt(1,12); x = result5*b - a;
-          text = `Solve: (x + ${a}) ÷ ${b} = ${result5}`; ans = x; break;
-        case 6: a = randInt(2,6); b = randInt(0,8); const q = randInt(1,10); c = a * (q); x = q + b; text = `Solve: ${a}(x − ${b}) = ${c}`; ans = x; break;
-        case 7: a = randInt(2,6); b = randInt(0,8); const c7 = randInt(b+1, b+12); x = (c7 - b) * a;
-          text = `Solve: (x ÷ ${a}) + ${b} = ${c7}`; ans = x; break;
-        case 8: a = randInt(2,6); c = randInt(2,6); const d8 = randInt(1,12); x = randInt(0,10);
-          b = d8*c - a*x; if(b<0){ const shift = Math.ceil((-b)/a); x -= shift; b = d8*c - a*x; }
-          text = `Solve: (${a}x + ${b}) ÷ ${c} = ${d8}`; ans = x; break;
-      }
-      return pack(text, ans, '+');
-    }
-
-    function makeDistractors(ans){
-      const set = new Set();
-      const range = Math.max(5, Math.floor(Math.abs(ans) * 0.4));
-      while(set.size < DISTRACTORS){
-        const offset = randInt(1, range);
-        const sign = randInt(0, 1) ? 1 : -1;
-        const v = ans + sign * offset;
-        if(v !== ans && v >= 0) set.add(v);
-      }
-      return [...set];
-    }
-
-    function shuffle(a){ for(let i=a.length-1;i>0;i--){ const j=randInt(0,i); [a[i],a[j]]=[a[j],a[i]]; } return a; }
-
-    function renderChoices(answer, distractors){
-      answers.innerHTML='';
-      const picks = [answer];
-      const uniq = [...new Set(distractors)].filter(v => v !== answer);
-      while (picks.length < CHOICES && uniq.length) {
-        const i = randInt(0, uniq.length - 1);
-        picks.push(uniq.splice(i, 1)[0]);
-      }
-      while (picks.length < CHOICES) {
-        const v = Math.max(0, answer + randInt(-9, 9));
-        if (!picks.includes(v)) picks.push(v);
-      }
-      const choices = shuffle(picks);
-      let locked = false;
-      choices.forEach(v=>{
-        const b=document.createElement('button');
-        b.className='option'; b.type='button'; b.textContent=v; b.setAttribute('aria-label', `Answer ${v}`);
-        b.addEventListener('click', ()=>{
-          if(locked) return; locked = true;
-          const correct = (v===answer);
-          b.classList.add(correct?'correct':'wrong');
-          if(correct){
-            playCorrectSound();
-            createRipple(b);
-            createConfetti(b);
-          } else {
-            playIncorrectSound();
+      // Sound (unchanged)
+      let audioCtx = null;
+      function ensureAudio(){
+        if(!S.sound) return false;
+        try{
+          if(!audioCtx){
+            const Ctx = window.AudioContext || window.webkitAudioContext;
+            if(!Ctx) return false;
+            audioCtx = new Ctx();
           }
-          S.total++; 
-          if(correct){ 
-            S.correct++; 
-            S.streak++;
-            S.stageCorrect++;
-            bumpTotals();
-            if(S.streak>0 && S.streak % 5 === 0){ setTimeout(()=>playStreakSound(), 200); }
-          } else { S.streak=0; }
-          updateHud(); updateProgressBar(); showFeedback(correct);
-          setTimeout(()=>{ if(S.running) nextQ(); locked=false; }, 800);
-        });
-        answers.appendChild(b);
-      });
-    }
+          return true;
+        }catch(e){ return false; }
+      }
+      function playCorrectSound(){ if(!ensureAudio()) return; const n=audioCtx.currentTime; [523.25,659.25,783.99].forEach((f,i)=>{const o=audioCtx.createOscillator(),g=audioCtx.createGain();o.connect(g);g.connect(audioCtx.destination);o.frequency.value=f;o.type='sine';g.gain.setValueAtTime(0,n+i*.1);g.gain.linearRampToValueAtTime(0.15,n+i*.1+.02);g.gain.exponentialRampToValueAtTime(0.01,n+i*.1+.15);o.start(n+i*.1);o.stop(n+i*.1+.15);});}
+      function playIncorrectSound(){ if(!ensureAudio()) return; const n=audioCtx.currentTime,o=audioCtx.createOscillator(),g=audioCtx.createGain();o.connect(g);g.connect(audioCtx.destination);o.type='square';o.frequency.setValueAtTime(200,n);o.frequency.exponentialRampToValueAtTime(100,n+.15);g.gain.setValueAtTime(0.1,n);g.gain.exponentialRampToValueAtTime(0.01,n+.15);o.start(n);o.stop(n+.15);}
+      function playStartSound(){ if(!ensureAudio()) return; const n=audioCtx.currentTime,o=audioCtx.createOscillator(),g=audioCtx.createGain();o.connect(g);g.connect(audioCtx.destination);o.type='sine';o.frequency.setValueAtTime(400,n);o.frequency.exponentialRampToValueAtTime(800,n+.2);g.gain.setValueAtTime(0.2,n);g.gain.exponentialRampToValueAtTime(0.01,n+.2);o.start(n);o.stop(n+.2);}
+      function playTimeUpSound(){ if(!ensureAudio()) return; const n=audioCtx.currentTime;[0,.15,.3].forEach(d=>{const o=audioCtx.createOscillator(),g=audioCtx.createGain();o.connect(g);g.connect(audioCtx.destination);o.frequency.value=440;o.type='sine';g.gain.setValueAtTime(0.2,n+d);g.gain.exponentialRampToValueAtTime(0.01,n+d+.1);o.start(n+d);o.stop(n+d+.1);});}
+      function playStreakSound(){ if(!ensureAudio()) return; const n=audioCtx.currentTime;[523.25,659.25,783.99,1046.50].forEach((f,i)=>{const o=audioCtx.createOscillator(),g=audioCtx.createGain();o.connect(g);g.connect(audioCtx.destination);o.frequency.value=f;o.type='triangle';g.gain.setValueAtTime(0,n+i*.08);g.gain.linearRampToValueAtTime(0.12,n+i*.08+.01);g.gain.exponentialRampToValueAtTime(0.01,n+i*.08+.2);o.start(n+i*.08);o.stop(n+i*.08+.2);});}
+      function playClickSound(){ if(!ensureAudio()) return; const n=audioCtx.currentTime,o=audioCtx.createOscillator(),g=audioCtx.createGain();o.connect(g);g.connect(audioCtx.destination);o.frequency.value=800;o.type='sine';g.gain.setValueAtTime(0.05,n);g.gain.exponentialRampToValueAtTime(0.01,n+.05);o.start(n);o.stop(n+.05);}
 
-    function updateProgressBar(initial=false){
-      // 5 correct = stage
-      if(S.stageCorrect >= 5){
-        S.stageCorrect = 0;
-        S.stages += 1;
-        stagesChip.textContent = `Stages: ${S.stages}`;
-        stageCounter.textContent = `Stage: ${S.stages}`;
-        if(!initial){
-          stageCounter.classList.remove('bump');
-          void stageCounter.offsetWidth; // restart animation
-          stageCounter.classList.add('bump');
+      // DOM (Updated to include settingsModal and settingsBtn)
+      const timer=$('#timer'), counter=$('#counter'), answers=$('#answers'),
+            question=$('#question'), feedback=$('#feedback'),
+            timeSelect=$('#timeSelect'), modeSelect=$('#modeSelect'),
+            splash=$('#splash'), splashMsg=$('#splashMessage'),
+            splashScore=$('#splashScore'), startBtn=$('#startBtn'),
+            pauseBtn=$('#pauseBtn'), resetBtn=$('#resetBtn'),
+            settingsBtn=$('#settingsBtn'), closeSettings=$('#closeSettings'), // New settings elements
+            closeSplash=$('#closeSplash'), playAgain=$('#playAgain'),
+            streakChip=$('#streak'), accChip=$('#accuracy'),
+            opColor=$('#opColor'), soundToggle=$('#soundToggle'),
+            stagesChip=$('#stages'), stageBanner=$('#stageBanner'),
+            progressFill=$('#progressFill'), progressLabel=$('#progressLabel'),
+            stageCounter=$('#stageCounter'), themeSelect=$('#themeSelect'),
+            app=$('.app'), settingsModal=$('#settingsModal');
+
+      // Utility for debouncing resize events
+      function debounce(func, delay){
+        let timeoutId;
+        return function(...args){
+          clearTimeout(timeoutId);
+          timeoutId = setTimeout(() => func.apply(this, args), delay);
+        };
+      }
+      
+      // Utility to adjust font size to fit text on one line
+      // MAX_FONT_SIZE is now passed as the max size (140)
+      function fitOneLine(element, minSize, maxSize) {
+        const parentWidth = element.parentElement.offsetWidth;
+        element.style.fontSize = `${maxSize}px`;
+        
+        // This function is only needed for shrinking math equations. 
+        // We bypass the shrinking for the fixed welcome text.
+        if(element.classList.contains('welcome')) return; 
+
+        let currentSize = maxSize;
+        // Check if the content width exceeds 95% of the parent width
+        while (element.scrollWidth > parentWidth * 0.95 && currentSize > minSize) {
+          currentSize--;
+          element.style.fontSize = `${currentSize}px`;
         }
-        stageBanner.textContent = 'Stage complete — great work';
-        stageBanner.classList.add('show');
-        setTimeout(()=>stageBanner.classList.remove('show'), 1500);
       }
-      const pct = (S.stageCorrect/5)*100;
-      progressFill.style.width = pct + '%';
-      progressLabel.textContent = `${S.stageCorrect} / 5 correct`;
-      if(initial){
-        stageCounter.textContent = `Stage: ${S.stages}`;
+
+      // Persistence
+      const LS_KEY = 'mathsChallengeStats';
+      function saveStats(data){
+        try{
+          const prev = JSON.parse(localStorage.getItem(LS_KEY) || '{}');
+          const merged = { ...prev, ...data };
+          localStorage.setItem(LS_KEY, JSON.stringify(merged));
+        }catch(e){ /* ignore */ }
       }
-    }
-
-    function createRipple(btn){
-      const ripple = document.createElement('div');
-      ripple.className = 'ripple';
-      ripple.style.left = '50%';
-      ripple.style.top = '50%';
-      ripple.style.transform = 'translate(-50%, -50%)';
-      btn.appendChild(ripple);
-      setTimeout(()=>ripple.remove(), 600);
-    }
-
-    function createConfetti(btn){
-      if(prefersReduce()) return;
-      const rect = btn.getBoundingClientRect();
-      const colors = ['#4cd27d', '#4ca3ff', '#ffd700', '#ff6b9d', '#9d4cff'];
-      for(let i=0; i<12; i++){
-        const particle = document.createElement('div');
-        particle.className = 'confetti-particle';
-        particle.style.background = colors[randInt(0, colors.length-1)];
-        particle.style.left = `${rect.left + rect.width/2 + randInt(-30, 30)}px`;
-        particle.style.top = `${rect.top + rect.height/2}px`;
-        particle.style.animation = `confettiFall ${0.8 + Math.random()*0.4}s ease-out forwards`;
-        particle.style.animationDelay = `${Math.random()*0.1}s`;
-        document.body.appendChild(particle);
-        setTimeout(()=>particle.remove(), 1400);
+      function getStats(){ try{ return JSON.parse(localStorage.getItem(LS_KEY) || '{}'); }catch(e){ return {}; } }
+      function bumpTotals(){
+        const prev = getStats();
+        const totalSolved = (prev.totalSolved||0) + 1;
+        saveStats({ totalSolved, bestStreak: Math.max(prev.bestStreak||0, S.streak) });
       }
-    }
 
-    function showFeedback(ok){
-      feedback.textContent = ok?'Correct ✅':'Incorrect ❌';
-      feedback.className = 'show ' + (ok?'correct':'wrong');
-      setTimeout(()=>{ feedback.className=''; }, 700);
-    }
-
-    // Splash + focus trap
-    let trapHandler = null;
-    function showSplash(){
-      splashMsg.textContent="⏰ Time's Up!";
-      splashScore.textContent=`You got ${S.correct} of ${S.total} correct — Stages: ${S.stages}`;
-      splash.classList.add('show');
-      const focusables = [closeSplash, playAgain];
-      const first = focusables[0], last = focusables[focusables.length-1];
-      first.focus();
-      trapHandler = (e)=>{
-        if(e.key !== 'Tab') return;
-        if(e.shiftKey && document.activeElement === first){ e.preventDefault(); last.focus(); }
-        else if(!e.shiftKey && document.activeElement === last){ e.preventDefault(); first.focus(); }
-      };
-      document.addEventListener('keydown', trapHandler, true);
-    }
-    function hideSplash(){ 
-      splash.classList.remove('show'); 
-      if(trapHandler){ document.removeEventListener('keydown', trapHandler, true); trapHandler=null; }
-      startBtn.focus();
-    }
-
-    function fitOneLine(el, maxPx=110, minPx=24){
-      const parent = el.parentElement;
-      const maxWidth = parent.clientWidth - 24;
-      let size = maxPx;
-      el.style.fontSize = size + 'px';
-      while(el.scrollWidth > maxWidth && size > minPx){
-        size -= 2;
-        el.style.fontSize = size + 'px';
+      // New: Checks if a question text is in the recent history
+      function isQuestionInHistory(questionText) {
+          return S.history.includes(questionText);
       }
-    }
+      
+      // New: Updates the history buffer
+      function updateHistory(questionText) {
+          // Add the new question to the front
+          S.history.unshift(questionText);
+          // Trim the array to the maximum size
+          if (S.history.length > HISTORY_SIZE) {
+              S.history.pop();
+          }
+      }
+      
+      // UI Helpers
+      function showSplash(){
+        splashMsg.textContent = `⏰ Time's Up!`;
+        splashScore.textContent = `You got ${S.correct} of ${S.total} correct`;
+        splash.classList.add('show');
+        splash.focus();
+      }
+      function hideSplash(){ splash.classList.remove('show'); }
+      function showFeedback(correct){
+        feedback.textContent = correct ? 'Correct! Keep going.' : 'Oops, try the next one.';
+        feedback.className = correct ? 'show correct' : 'show wrong';
+        setTimeout(()=>feedback.classList.remove('show'), 800);
+      }
+      
+      function showSettings(){
+        if(S.running) {
+          // Pause game when settings open
+          togglePause(); 
+          // Ensure pause button reflects "Resume"
+          pauseBtn.textContent = 'Resume'; 
+        }
+        settingsModal.classList.add('show'); 
+        settingsModal.focus();
+      }
+      function hideSettings(){ settingsModal.classList.remove('show'); }
 
-    function debounce(fn, ms){
-      let t; return (...args)=>{ clearTimeout(t); t=setTimeout(()=>fn.apply(null,args), ms); };
-    }
 
-    // Boot
-    (function init(){
-      const stats = getStats();
-      if(typeof stats.sound === 'boolean'){ S.sound = stats.sound; soundToggle.checked = S.sound; }
-      updateHud();
-      updateProgressBar(true);
-      colorOpHint('+');
-      fitOneLine(question, 110, 24);
-      renderChoices(5,[4,6,7,8,9]);
-    })();
+      // Listeners
+      timeSelect.addEventListener('change',()=>{
+        // Allow time change even when paused/running, but update the state
+        S.time = +timeSelect.value;
+        saveStats({ time: S.time });
+        // Only update the display if not running/paused, otherwise timer will handle it
+        if(!S.running && !S.paused) { 
+            timer.textContent = `${String(S.time).padStart(2,'0')}:00`;
+        }
+      });
+      modeSelect.addEventListener('change',()=>{ S.mode = modeSelect.value; colorOpHint(); saveStats({ mode: S.mode }); });
+      soundToggle.addEventListener('change',()=>{
+        S.sound = soundToggle.checked;
+        saveStats({ sound: S.sound });
+        if(S.sound){ ensureAudio(); }
+      });
+      themeSelect.addEventListener('change',()=>{
+        const t = themeSelect.value;
+        app.setAttribute('data-theme', t);
+        saveStats({ theme: t });
+      });
+
+      startBtn.addEventListener('click', start);
+      pauseBtn.addEventListener('click', togglePause);
+      resetBtn.addEventListener('click', reset);
+      
+      settingsBtn.addEventListener('click', showSettings); // New settings button listener
+      closeSettings.addEventListener('click', ()=>{ playClickSound(); hideSettings(); }); // Close settings listener
+      
+      closeSplash.addEventListener('click', ()=>{ playClickSound(); hideSplash(); });
+      playAgain.addEventListener('click', ()=>{ hideSplash(); start(); });
+
+      // Keyboard shortcuts with focus guard
+      document.addEventListener('keydown',(e)=>{
+        const activeTag = (document.activeElement?.tagName || '').toLowerCase();
+        if (activeTag === 'select' || activeTag === 'button') return;
+
+        const k = e.key.toLowerCase();
+        if (e.code === 'Space' || k === 'enter'){
+          e.preventDefault();
+          if(!S.running || S.paused){ start(); }
+        } else if (k==='r') { e.preventDefault(); reset(); }
+        else if (k==='p') { e.preventDefault(); togglePause(); }
+        else if (/^[1-4]$/.test(k)){
+          const i = parseInt(k,10)-1;
+          const btns = $$('#answers .option');
+          if(btns[i]) btns[i].click();
+        }
+      });
+
+      // Updated resize listener call with new MAX_FONT_SIZE
+      window.addEventListener('resize', debounce(()=> {
+          if (S.running) {
+              fitOneLine(question, 32, MAX_FONT_SIZE);
+          }
+      }, 120));
+
+      function start(){
+        if(settingsModal.classList.contains('show')) { hideSettings(); } // Close settings if open
+        if(S.paused){ // resume
+          S.paused = false;
+          S.running = true;
+          S.end = Date.now() + S.remainingMs;
+          pauseBtn.textContent = 'Pause'; // Reset button text
+          tick();
+          return;
+        }
+        playStartSound();
+        S.running=true; S.paused=false;
+        pauseBtn.textContent = 'Pause'; // Reset button text
+        S.end=Date.now()+S.time*60*1000;
+        S.correct=0; S.total=0; S.streak=0; updateHud();
+        S.history = []; // Reset history at start
+        // progress reset
+        S.stageCorrect = 0; S.stages = 0; updateProgressBar(true);
+        stageBanner.classList.remove('show');
+        
+        // Remove welcome class and operator text for game start
+        question.classList.remove('welcome');
+        opColor.textContent = ''; 
+        
+        tick(); nextQ();
+      }
+      function togglePause(){
+        if(!S.running && !S.paused) return; // Ignore pause if game hasn't started
+        if(!S.paused){
+          S.paused = true; S.running = false;
+          S.remainingMs = Math.max(0, S.end - Date.now());
+          pauseBtn.textContent = 'Resume';
+        }else{
+          S.paused = false; S.running = true;
+          S.end = Date.now() + S.remainingMs;
+          pauseBtn.textContent = 'Pause';
+          tick();
+        }
+      }
+      function reset(){
+        S.running=false; S.paused=false; pauseBtn.textContent='Pause';
+        timer.textContent=`${String(S.time).padStart(2,'0')}:00`;
+        S.correct=0; S.total=0; S.streak=0; updateHud();
+        S.history = []; // Reset history on reset
+        answers.innerHTML=''; 
+        
+        // Set welcome text and class on reset
+        question.innerHTML = WELCOME_TEXT; 
+        question.classList.add('welcome');
+        opColor.textContent='+';
+        
+        feedback.textContent=''; feedback.className=''; hideSplash(); hideSettings(); // Hide modals
+        // Note: fitOneLine isn't needed here due to the .welcome class CSS
+        
+        // progress reset
+        S.stageCorrect = 0; S.stages = 0;
+        stageCounter.classList.remove('bump');
+        stageBanner.classList.remove('show');
+        updateProgressBar(true);
+      }
+
+      function tick(){
+        if(!S.running) return;
+        const r=S.end-Date.now();
+        if(r<=0){ 
+          S.running=false; 
+          timer.textContent='00:00'; 
+          playTimeUpSound();
+          showSplash(); 
+          return; 
+        }
+        const m=Math.floor(r/60000), s=Math.floor((r%60000)/1000);
+        timer.textContent=`${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;
+        requestAnimationFrame(tick);
+      }
+
+      function updateHud(){
+        counter.textContent=`Correct: ${S.correct} / ${S.total}`;
+        streakChip.textContent = `Streak: ${S.streak}`;
+        const acc = S.total? Math.round((S.correct/S.total)*100):0;
+        accChip.textContent = `Accuracy: ${acc}%`;
+        counter.classList.add('pulse');
+        setTimeout(()=>counter.classList.remove('pulse'), 400);
+        if(S.streak > 0){
+          streakChip.classList.add('pulse');
+          setTimeout(()=>streakChip.classList.remove('pulse'), 400);
+        }
+        stagesChip.textContent = `Stages: ${S.stages}`;
+      }
+
+      // Modified nextQ to check and update history
+      function nextQ(){
+        let q;
+        let attempts = 0;
+        const MAX_ATTEMPTS = 5; // Safety break
+        
+        // Loop until a unique question or max attempts reached
+        do {
+          q = makeQuestion(S.mode);
+          attempts++;
+        } while (isQuestionInHistory(q.text) && attempts < MAX_ATTEMPTS);
+
+        question.textContent = q.text;
+        colorOpHint(q.op);
+        // Apply scaling logic for questions
+        fitOneLine(question, 32, MAX_FONT_SIZE);
+        renderChoices(q.answer, q.distractors);
+        
+        // Only update history if a unique question was successfully generated
+        if (attempts < MAX_ATTEMPTS) {
+            updateHistory(q.text);
+        }
+      }
+
+      function colorOpHint(op){
+        const map = {'+':'var(--green)','−':'var(--orange)','×':'var(--blue)','÷':'var(--purple)'};
+        opColor.textContent = op || opColor.textContent || '+';
+        opColor.style.color = map[opColor.textContent] || 'var(--yellow)';
+      }
+
+      function makeQuestion(mode){
+        switch(mode){
+          case 'veryEasyAdd':  return genAdd(1,6);
+          case 'veryEasySub':  return genSub(1,6);
+          case 'easyAdd':      return genAdd(1,10);
+          case 'easySub':      return genSub(1,10);
+          case 'mediumAddSub': return randInt(0,1)?genAdd(10,30):genSub(10,30);
+          case 'mediumMul':    return genMul(1,6);
+          case 'mediumFractions': return genFractions();
+          case 'mediumPlaceValue': return genPlaceValue();
+          case 'mediumFracDec': return genFracDecEquiv();
+          case 'hardMulDiv':   return randInt(0,3)===0?genFormula(): (randInt(0,1)?genMul(4,10):genDiv(4,10));
+          case 'veryHardASMD': return genASMDVeryHard();
+          case 'veryHardAlg':  return genAlgebraBasic();
+          case 'veryHardPowersRoots': return genPowersRoots();
+          default:             return genAdd(1,10);
+        }
+      }
+
+      function pack(text, answer, op){ return { text, answer, op, distractors:makeDistractors(answer) }; }
+
+      function genAdd(min,max){ const a=randInt(min,max-1), b=randInt(min,max-1), ans=a+b; return pack(`${a} + ${b} = ?`, ans, '+'); }
+      function genSub(min,max){ let a=randInt(min,max-1), b=randInt(min,max-1); if(b>a)[a,b]=[b,a]; const ans=a-b; return pack(`${a} − ${b} = ?`, ans, '−'); }
+      function genMul(min,max){ const a=randInt(min,max), b=randInt(min,max), ans=a*b; return pack(`${a} × ${b} = ?`, ans, '×'); }
+      function genDiv(min,max){ const a=randInt(min,max), b=randInt(min,max); const dividend=a*b, divisor=a, ans=dividend/divisor; return pack(`${dividend} ÷ ${divisor} = ?`, ans, '÷'); }
+      function genFormula(){ const a=randInt(1,5), b=randInt(1,5), c=randInt(1,5); const add = randInt(0,1)===0; const opSymbol = add ? '+' : '−'; const ans = add ? a*(b+c) : a*(b-c); return pack(`${a} × (${b} ${opSymbol} ${c}) = ?`, ans, '×'); }
+
+      function genFractions(){
+        const t = randInt(1,8);
+        let text, ans;
+        switch(t){
+          case 1: const n1 = randInt(2,12) * 2; ans = n1/2; text = `What is 1/2 of ${n1}?`; break;
+          case 2: const n2 = randInt(2,8) * 4;  ans = n2/4; text = `What is 1/4 of ${n2}?`; break;
+          case 3: const n3 = randInt(2,6) * 8;  ans = n3/8; text = `What is 1/8 of ${n3}?`; break;
+          case 4: const n4 = randInt(2,10)* 3;  ans = n4/3; text = `What is 1/3 of ${n4}?`; break;
+          case 5: const a1 = randInt(1,2), a2 = randInt(1,3);
+                  const denom5 = randInt(0,1) ? 4 : 8;
+                  if(a1 + a2 <= denom5){ ans=a1+a2; text = `${a1}/${denom5} + ${a2}/${denom5} = ?/${denom5}`; }
+                  else { ans=a1+a2; text = `${a1}/${denom5} + ${a2}/${denom5} = ?/${denom5}`; } break;
+          case 6: const s1 = randInt(2,4), s2 = randInt(1,s1-1);
+                  ans = s1 - s2; text = `${s1}/4 − ${s2}/4 = ?/4`; break;
+          case 7: const mult = randInt(2,3); const denom = [2,4,8][randInt(0,2)]; const whole = randInt(3,8)*denom;
+                  ans = (whole/denom)*mult; text = `What is ${mult}/${denom} of ${whole}?`; break;
+          case 8: const wholes = randInt(2,6); const frac = [2,4][randInt(0,1)];
+                  ans = wholes * frac; text = `How many 1/${frac} in ${wholes}?`; break;
+        }
+        return pack(text, ans, '+');
+      }
+      function genFracDecEquiv(){
+        const t = randInt(1,8);
+        let text, ans;
+        switch(t){
+          case 1: ans=2; text = `1/2 = ?/4`; break;
+          case 2: ans=4; text = `1/2 = ?/8`; break;
+          case 3: ans=2; text = `1/4 = ?/8`; break;
+          case 4: ans=4; text = `2/4 = ?/8`; break;
+          case 5: ans=2; text = `1/3 = ?/6`; break;
+          case 6: ans=4; text = `2/3 = ?/6`; break;
+          case 7: const addProblems = [
+                  {text: '1/4 + 1/4 = ?/4', ans: 2},
+                  {text: '1/8 + 2/8 = ?/8', ans: 3},
+                  {text: '2/4 + 1/4 = ?/4', ans: 3},
+                  {text: '1/2 + 1/2 = ?/2', ans: 2},
+                  {text: '3/8 + 2/8 = ?/8', ans: 5},
+                ]; const pick = addProblems[randInt(0, addProblems.length-1)]; text = pick.text; ans = pick.ans; break;
+          case 8: const convProblems = [
+                  {text: '1/2 + 1/4 = ?/4', ans: 3},
+                  {text: '1/2 + 1/8 = ?/8', ans: 5},
+                  {text: '1/4 + 1/8 = ?/8', ans: 3},
+                  {text: '1/2 + 2/8 = ?/8', ans: 6},
+                  {text: '1/3 + 1/6 = ?/6', ans: 3},
+                ]; const pick2 = convProblems[randInt(0, convProblems.length-1)]; text = pick2.text; ans = pick2.ans; break;
+        }
+        return pack(text, ans, '+');
+      }
+      function genPlaceValue(){
+        const t = randInt(1,8);
+        let text, ans;
+        switch(t){
+          case 1: const p1 = randInt(1000, 9999); ans = Math.floor((p1 % 1000) / 100); text = `In ${p1}, what digit is in the hundreds place?`; break;
+          case 2: const p2 = randInt(100, 9999);  ans = Math.floor((p2 % 100) / 10);  text = `In ${p2}, what digit is in the tens place?`; break;
+          case 3: const p3 = randInt(1000, 9999);
+                  const places = [
+                    {name: 'thousands', val: Math.floor(p3/1000) * 1000},
+                    {name: 'hundreds',  val: Math.floor((p3%1000)/100) * 100},
+                    {name: 'tens',      val: Math.floor((p3%100)/10) * 10}
+                  ];
+                  const picked = places[randInt(0, 2)];
+                  ans = picked.val; text = `In ${p3}, what is the value of the ${picked.name} place?`; break;
+          case 4:
+                  const a = randInt(1000, 9999), b = randInt(1000, 9999);
+                  if(a === b){
+                    const bump = a + randInt(1,100);
+                    ans = Math.max(a, bump);
+                    text = `Which is bigger: ${a} or ${bump}?`;
+                  }else{
+                    ans = Math.max(a,b);
+                    text = `Which is bigger: ${a} or ${b}?`;
+                  }
+                  break;
+          case 5:
+                  const c = randInt(1000, 9999), d = randInt(1000, 9999);
+                  if(c === d){
+                    const lower = c - randInt(1,100);
+                    ans = Math.min(c, lower);
+                    text = `Which is smaller: ${c} or ${lower}?`;
+                  }else{
+                    ans = Math.min(c, d);
+                    text = `Which is smaller: ${c} or ${d}?`;
+                  }
+                  break;
+          case 6: const p6 = randInt(1000, 9998); ans = p6 + 1; text = `What number comes after ${p6}?`; break;
+          case 7: const p7 = randInt(1001, 9999); ans = p7 - 1; text = `What number comes before ${p7}?`; break;
+          case 8: const p8 = randInt(1050, 9950); const rem = p8 % 100; ans = rem >= 50 ? p8 + (100 - rem) : p8 - rem; text = `Round ${p8} to the nearest hundred`; break;
+        }
+        return pack(text, ans, '+');
+      }
+      function genPowersRoots(){
+        const t = randInt(1,6);
+        let text, ans;
+        switch(t){
+          case 1: const b1 = randInt(1,12); ans = b1*b1; text = `${b1}² = ?`; break;
+          case 2: const r = randInt(1,12);  ans = r;     text = `√${r*r} = ?`; break;
+          case 3: const b2 = randInt(1,5);  ans = b2*b2*b2; text = `${b2}³ = ?`; break;
+          case 4: const cr = randInt(1,5);  ans = cr;    text = `∛${cr*cr*cr} = ?`; break;
+          case 5: const e2 = randInt(1,8);  ans = Math.pow(2,e2); text = `2^${e2} = ?`; break;
+          case 6: const e10= randInt(1,4);  ans = Math.pow(10,e10); text = `10^${e10} = ?`; break;
+        }
+        return pack(text, ans, '+');
+      }
+      function genASMDVeryHard(){
+        const t = randInt(1,8);
+        let a,b,c,ans,text;
+        switch(t){
+          case 1: a = randInt(20,99); b = randInt(20,99); ans = a + b; text = `${a} + ${b} = ?`; break;
+          case 2: a = randInt(40,150); b = randInt(20,99); if(b>a) [a,b]=[b,a]; ans = a - b; text = `${a} − ${b} = ?`; break;
+          case 3: a = randInt(7,12); b = randInt(7,12); ans = a * b; text = `${a} × ${b} = ?`; break;
+          case 4: a = randInt(7,12); b = randInt(7,12); ans = b; text = `${a*b} ÷ ${a} = ?`; break;
+          case 5: a = randInt(4,12); b = randInt(4,12); c = randInt(10,99); ans = a*b + c; text = `${a} × ${b} + ${c} = ?`; break;
+          case 6: a = randInt(4,12); b = randInt(4,12); const prod = a*b; c = randInt(0, Math.min(99, prod)); ans = prod - c; text = `${a} × ${b} − ${c} = ?`; break;
+          case 7: a = randInt(10,30); b = randInt(10,30); c = randInt(2,9); ans = (a + b) * c; text = `(${a} + ${b}) × ${c} = ?`; break;
+          case 8: a = randInt(20,40); b = randInt(10,20); if(b>a) [a,b]=[b,a]; c = randInt(2,9); ans = (a - b) * c; text = `(${a} − ${b}) × ${c} = ?`; break;
+        }
+        return pack(text, ans, '+');
+      }
+      function genAlgebraBasic(){
+        const t = randInt(1,8);
+        let x,a,b,c,text,ans;
+        switch(t){
+          case 1: x = randInt(1,12); a = randInt(1,12); b = x + a; text = `Solve: x + ${a} = ${b}`; ans = x; break;
+          case 2: a = randInt(1,10); x = randInt(a+1,a+12); b = x - a; text = `Solve: x − ${a} = ${b}`; ans = x; break;
+          case 3: a = randInt(2,12); x = randInt(1,10); b = a * x; text = `Solve: ${a}x = ${b}`; ans = x; break;
+          case 4: a = randInt(2,9); x = randInt(1,10); b = randInt(0,9); c = a*x + b; text = `Solve: ${a}x + ${b} = ${c}`; ans = x; break;
+          case 5: b = randInt(2,6); a = randInt(0,9); const result5 = randInt(1,12); x = result5*b - a;
+            text = `Solve: (x + ${a}) ÷ ${b} = ${result5}`; ans = x; break;
+          case 6: a = randInt(2,6); b = randInt(0,8); const q = randInt(1,10); c = a * (q); x = q + b; text = `Solve: ${a}(x − ${b}) = ${c}`; ans = x; break;
+          case 7: a = randInt(2,6); b = randInt(0,8); const c7 = randInt(b+1, b+12); x = (c7 - b) * a;
+            text = `Solve: (x ÷ ${a}) + ${b} = ${c7}`; ans = x; break;
+          case 8: a = randInt(2,6); c = randInt(2,6); const d8 = randInt(1,12); x = randInt(0,10);
+            b = d8*c - a*x; if(b<0){ const shift = Math.ceil((-b)/a); x -= shift; b = d8*c - a*x; }
+            text = `Solve: (${a}x + ${b}) ÷ ${c} = ${d8}`; ans = x; break;
+        }
+        return pack(text, ans, '+');
+      }
+
+      function makeDistractors(ans){
+        const set = new Set();
+        // Adjust range based on answer magnitude, minimum of 5
+        const range = Math.max(5, Math.floor(Math.abs(ans) * 0.4)); 
+        while(set.size < DISTRACTORS){
+          const offset = randInt(1, range);
+          const sign = randInt(0, 1) ? 1 : -1;
+          const v = ans + sign * offset;
+          // Ensure v is not the answer and not negative (unless the answer itself is negative, though most generated questions are positive)
+          if(v !== ans && v >= 0) set.add(v); 
+        }
+        return [...set];
+      }
+
+      function shuffle(a){ for(let i=a.length-1;i>0;i--){ const j=randInt(0,i); [a[i],a[j]]=[a[j],a[i]]; } return a; }
+
+      function renderChoices(answer, distractors){
+        answers.innerHTML='';
+        const picks = [answer];
+        const uniq = [...new Set(distractors)].filter(v => v !== answer);
+        while (picks.length < CHOICES && uniq.length) {
+          const i = randInt(0, uniq.length - 1);
+          picks.push(uniq.splice(i, 1)[0]);
+        }
+        while (picks.length < CHOICES) {
+          const v = Math.max(0, answer + randInt(-9, 9));
+          if (!picks.includes(v)) picks.push(v);
+        }
+        const choices = shuffle(picks);
+        let locked = false;
+        choices.forEach(v=>{
+          const b=document.createElement('button');
+          b.className='option'; b.type='button'; b.textContent=v; b.setAttribute('aria-label', `Answer ${v}`);
+          b.addEventListener('click', ()=>{
+            if(locked) return; locked = true;
+            const correct = (v===answer);
+            b.classList.add(correct?'correct':'wrong');
+            if(correct){
+              playCorrectSound();
+              createRipple(b);
+              createConfetti(b);
+            } else {
+              playIncorrectSound();
+            }
+            S.total++; 
+            if(correct){ 
+              S.correct++; 
+              S.streak++;
+              S.stageCorrect++;
+              bumpTotals();
+              if(S.streak>0 && S.streak % 5 === 0){ setTimeout(()=>playStreakSound(), 200); }
+            } else { S.streak=0; }
+            updateHud(); updateProgressBar(); showFeedback(correct);
+            setTimeout(()=>{ if(S.running) nextQ(); locked=false; }, 800);
+          });
+          answers.appendChild(b);
+        });
+      }
+
+      function updateProgressBar(initial=false){
+        // 5 correct = stage
+        if(S.stageCorrect >= 5){
+          S.stageCorrect = 0;
+          S.stages += 1;
+          stagesChip.textContent = `Stages: ${S.stages}`;
+          stageCounter.textContent = `Stage: ${S.stages}`;
+          if(!initial){
+            stageCounter.classList.remove('bump');
+            void stageCounter.offsetWidth; // restart animation
+            stageCounter.classList.add('bump');
+          }
+          stageBanner.textContent = 'Stage complete — great work';
+          stageBanner.classList.add('show');
+          setTimeout(()=>stageBanner.classList.remove('show'), 1500);
+        }
+        const pct = (S.stageCorrect/5)*100;
+        progressFill.style.width = pct + '%';
+        progressLabel.textContent = `${S.stageCorrect} / 5 correct`;
+        const pb = document.getElementById('progressBar');
+        if(pb) pb.setAttribute('aria-valuenow', String(S.stageCorrect));
+        if(initial){
+          stageCounter.textContent = `Stage: ${S.stages}`;
+        }
+      }
+
+      function createRipple(btn){
+        const ripple = document.createElement('div');
+        ripple.className = 'ripple';
+        ripple.style.left = '50%';
+        ripple.style.top = '50%';
+        ripple.style.transform = 'translate(-50%, -50%)';
+        btn.appendChild(ripple);
+        setTimeout(()=>ripple.remove(), 600);
+      }
+
+      function createConfetti(btn){
+        if(prefersReduce()) return;
+        const rect = btn.getBoundingClientRect();
+        const colors = ['#4cd27d', '#4ca3ff', '#ffd700', '#ff6b9d', '#9d4cff'];
+        for(let i=0; i<12; i++){
+          const particle = document.createElement('div');
+          particle.className = 'confetti-particle';
+          particle.style.background = colors[randInt(0, colors.length-1)];
+          particle.style.left = `${rect.left + rect.width/2 + randInt(-30, 30)}px`;
+          particle.style.top = `${rect.top + rect.height/2}px`;
+          particle.style.animation = `confettiFall ${0.8 + Math.random()*0.4}s ease-out forwards`;
+          particle.style.animationDelay = `${Math.random()*0.1}s`;
+          document.body.appendChild(particle);
+          // Clean up confetti after animation
+          particle.addEventListener('animationend', () => particle.remove());
+        }
+      }
+
+      // Initial setup
+      function init(){
+        const stats = getStats();
+        // Load saved settings
+        S.time = stats.time || 5;
+        S.mode = stats.mode || 'easyAdd';
+        S.sound = stats.sound || false;
+        const theme = stats.theme || 'dark';
+
+        timeSelect.value = S.time;
+        modeSelect.value = S.mode;
+        soundToggle.checked = S.sound;
+        themeSelect.value = theme;
+        app.setAttribute('data-theme', theme);
+        if(S.sound){ ensureAudio(); }
+
+        // Set initial timer text
+        timer.textContent = `${String(S.time).padStart(2,'0')}:00`;
+        
+        // Set initial welcome text and class
+        question.innerHTML = WELCOME_TEXT; 
+        question.classList.add('welcome');
+        colorOpHint('+'); 
+        
+        updateProgressBar(true); // Initialize progress bar display
+      }
+
+      init();
+    })(); // Closing the IIFE
   </script>
 </body>
 </html>
