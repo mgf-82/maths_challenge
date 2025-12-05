@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
-  <title>Super Maths Challenge 3.3</title>
+  <title>Super Maths Challenge 3.6</title>
   <meta name="color-scheme" content="dark light">
   
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -268,13 +268,21 @@
     }
     [data-theme='dark'] .high-score-label { background: rgba(255,255,255,0.05); }
 
+    /* BUTTONS */
     .btn-lg {
       background: var(--primary); color: white; font-family: var(--font-stack); font-size: 24px; font-weight: 700;
       padding: 16px 50px; border: none; border-radius: 99px; cursor: pointer;
-      box-shadow: 0 8px 20px rgba(78, 140, 255, 0.4); transition: transform 0.1s; margin-top: 10px;
+      box-shadow: 0 8px 20px rgba(78, 140, 255, 0.4); transition: transform 0.1s; margin-top: 10px; width: 100%; max-width: 280px;
     }
     .btn-lg:hover { transform: scale(1.05); }
     .btn-lg:active { transform: scale(0.95); }
+
+    .btn-secondary {
+      background: transparent; color: var(--text); font-family: var(--font-stack); font-size: 18px; font-weight: 600;
+      padding: 12px 30px; border: 2px solid var(--border); border-radius: 99px; cursor: pointer;
+      margin-top: 10px; width: 100%; max-width: 280px; transition: all 0.2s;
+    }
+    .btn-secondary:hover { border-color: var(--primary); color: var(--primary); }
 
     .modal-backdrop {
       position: absolute; inset: 0; background: rgba(0,0,0,0.6); z-index: 100;
@@ -283,6 +291,7 @@
     .modal-backdrop.show { opacity: 1; pointer-events: auto; }
     .result-sheet {
       background: var(--panel); width: 90%; max-width: 350px; padding: 30px; border-radius: var(--radius-md); text-align: center;
+      display: flex; flex-direction: column; align-items: center;
       animation: popIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
     }
     @keyframes popIn { from{transform:scale(0.5)} to{transform:scale(1)} }
@@ -295,14 +304,8 @@
       pointer-events: none; opacity: 0; transition: opacity 0.2s;
     }
     .countdown-overlay.active { opacity: 1; pointer-events: auto; }
-    
     .countdown-num { animation: popScale 0.9s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
-    
-    @keyframes popScale { 
-      0% { transform: scale(0.5); opacity: 0; } 
-      50% { transform: scale(1.3); opacity: 1; } 
-      100% { transform: scale(1); opacity: 0; } 
-    }
+    @keyframes popScale { 0% { transform: scale(0.5); opacity: 0; } 50% { transform: scale(1.3); opacity: 1; } 100% { transform: scale(1); opacity: 0; } }
 
     @media (max-width: 600px) {
       .answers-grid { grid-template-columns: 1fr; }
@@ -325,7 +328,7 @@
 
     <header>
       <div class="hud-left">
-        <button id="exitBtn" style="background:none; border:none; font-size:20px; cursor:pointer;">🏠</button>
+        <button id="exitBtn" style="background:none; border:none; font-size:20px; cursor:pointer;" title="Exit to Menu">🏠</button>
         <div class="pill score">⭐ <span id="scoreDisplay">0</span></div>
         <div class="multiplier-badge" id="multBadge">x2 COMBO!</div>
       </div>
@@ -354,7 +357,7 @@
 
     <div class="overlay-screen" id="welcomeScreen">
       <div class="screen-content">
-        <h1 style="color:var(--primary); margin-top:20px;">Super Maths 3.3</h1>
+        <h1 style="color:var(--primary); margin-top:20px;">Super Maths 3.6</h1>
         <p style="color:var(--muted)">Use Mouse or Keyboard (1-4)</p>
 
         <h3>1. Pick Hero</h3>
@@ -369,7 +372,11 @@
 
         <h3>2. Pick Mission</h3>
         <div class="mission-grid" id="missionSelector">
-          <div class="mission-card selected" data-mode="add">
+          <div class="mission-card selected" data-mode="junior">
+            <span class="mission-icon">🐣</span><span class="mission-title">Junior</span><span class="high-score-label" id="hs-junior">Best: 0</span>
+          </div>
+
+          <div class="mission-card" data-mode="add">
             <span class="mission-icon">➕</span><span class="mission-title">Addition</span><span class="high-score-label" id="hs-add">Best: 0</span>
           </div>
           <div class="mission-card" data-mode="sub">
@@ -418,14 +425,16 @@
         <h2>Time's Up!</h2>
         <div style="font-size:50px; font-weight:900; color:var(--primary)" id="finalScore">0</div>
         <p style="color:var(--muted); margin-bottom:20px;" id="newRecordMsg"></p>
+        
         <button class="btn-lg" id="playAgainBtn">AGAIN ↺</button>
+        <button class="btn-secondary" id="homeBtn">HOME 🏠</button>
       </div>
     </div>
 
   </div>
 
   <script>
-    /* ================= GAME ENGINE 3.3 ================= */
+    /* ================= GAME ENGINE 3.6 ================= */
     (function(){
       // -- STATE & CONFIG --
       const S = {
@@ -434,12 +443,12 @@
         endTime: 0,
         score: 0,
         streak: 0,
-        mode: 'add',
+        mode: 'junior', // Default to new mode
         avatar: '🐼',
         sound: true,
         multiplier: 1,
         highScores: JSON.parse(localStorage.getItem('superMathsScoresV2')) || 
-                    { add:0, sub:0, mul:0, div:0, fraction:0, power:0, root:0, algebra:0 },
+                    { junior:0, add:0, sub:0, mul:0, div:0, fraction:0, power:0, root:0, algebra:0 },
         rankTitle: 'Novice',
         rankScore: 0
       };
@@ -591,23 +600,19 @@
         el.countdown.classList.add('active');
         
         let count = 3;
-        
-        // Recursive function for timing
         function tick() {
           if (count > 0) {
-            // Number 3, 2, 1
             el.countdown.innerHTML = `<div class="countdown-num">${count}</div>`;
-            AudioSys.playTone(600 + (3-count)*100, 'triangle', 0.15); // Pitch rises
+            AudioSys.playTone(600 + (3-count)*100, 'triangle', 0.15); 
             count--;
             setTimeout(tick, 1000);
           } else {
-            // GO!
             el.countdown.innerHTML = `<div class="countdown-num" style="color:var(--success)">GO!</div>`;
             AudioSys.playTone(1000, 'square', 0.3);
             setTimeout(() => {
               el.countdown.classList.remove('active');
               el.countdown.innerHTML = '';
-              startGame(); // Actual Game Start
+              startGame(); 
             }, 500);
           }
         }
@@ -655,6 +660,16 @@
         const r = (a,b) => Math.floor(Math.random()*(b-a+1))+a;
         let q = "", a = 0;
         switch(S.mode) {
+          // -- JUNIOR MODE: ADD ONLY, MAX SUM 10 --
+          case 'junior':
+            // Result must be <= 10.
+            const total = r(2, 10); 
+            const part1 = r(1, total - 1);
+            const part2 = total - part1;
+            q = `${part1} + ${part2}`;
+            a = total;
+            break;
+
           case 'add': let x1=r(2,20), y1=r(2,20); q=`${x1} + ${y1}`; a=x1+y1; break;
           case 'sub': let x2=r(5,30), y2=r(1,20); if(y2>x2)[x2,y2]=[y2,x2]; q=`${x2} - ${y2}`; a=x2-y2; break;
           case 'mul': let x3=r(2,9), y3=r(2,9); q=`${x3} × ${y3}`; a=x3*y3; break;
@@ -735,10 +750,22 @@
         };
       });
 
-      // UPDATE START BUTTON TO TRIGGER COUNTDOWN
+      // BUTTON HANDLERS
       $('#startBtn').onclick = startCountdown;
       $('#playAgainBtn').onclick = startCountdown;
-      $('#exitBtn').onclick = () => { S.active = false; el.startScreen.classList.remove('hidden'); updateHighScoresDisplay(); };
+      
+      $('#homeBtn').onclick = () => {
+        el.resultModal.classList.remove('show');
+        el.startScreen.classList.remove('hidden');
+        updateHighScoresDisplay();
+      };
+
+      $('#exitBtn').onclick = () => { 
+        S.active = false; 
+        el.startScreen.classList.remove('hidden'); 
+        updateHighScoresDisplay(); 
+      };
+      
       $('#soundBtn').onclick = () => { S.sound = !S.sound; $('#soundBtn').style.opacity = S.sound ? '1' : '0.3'; };
       $('#themeToggle').onchange = (e) => { document.body.dataset.theme = e.target.checked ? 'light' : 'dark'; };
 
