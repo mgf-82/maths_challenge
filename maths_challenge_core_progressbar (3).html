@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
-  <title>Super Maths Challenge 3.6</title>
+  <title>Super Maths Challenge 3.7</title>
   <meta name="color-scheme" content="dark light">
   
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -357,7 +357,7 @@
 
     <div class="overlay-screen" id="welcomeScreen">
       <div class="screen-content">
-        <h1 style="color:var(--primary); margin-top:20px;">Super Maths 3.6</h1>
+        <h1 style="color:var(--primary); margin-top:20px;">Super Maths 3.7</h1>
         <p style="color:var(--muted)">Use Mouse or Keyboard (1-4)</p>
 
         <h3>1. Pick Hero</h3>
@@ -372,8 +372,13 @@
 
         <h3>2. Pick Mission</h3>
         <div class="mission-grid" id="missionSelector">
+          
           <div class="mission-card selected" data-mode="junior">
-            <span class="mission-icon">🐣</span><span class="mission-title">Junior</span><span class="high-score-label" id="hs-junior">Best: 0</span>
+            <span class="mission-icon">🐣</span><span class="mission-title">Junior (Sum 10)</span><span class="high-score-label" id="hs-junior">Best: 0</span>
+          </div>
+          
+          <div class="mission-card" data-mode="place">
+            <span class="mission-icon">🔢</span><span class="mission-title">Placement</span><span class="high-score-label" id="hs-place">Best: 0</span>
           </div>
 
           <div class="mission-card" data-mode="add">
@@ -434,7 +439,7 @@
   </div>
 
   <script>
-    /* ================= GAME ENGINE 3.6 ================= */
+    /* ================= GAME ENGINE 3.7 ================= */
     (function(){
       // -- STATE & CONFIG --
       const S = {
@@ -448,7 +453,7 @@
         sound: true,
         multiplier: 1,
         highScores: JSON.parse(localStorage.getItem('superMathsScoresV2')) || 
-                    { junior:0, add:0, sub:0, mul:0, div:0, fraction:0, power:0, root:0, algebra:0 },
+                    { junior:0, place:0, add:0, sub:0, mul:0, div:0, fraction:0, power:0, root:0, algebra:0 },
         rankTitle: 'Novice',
         rankScore: 0
       };
@@ -660,15 +665,29 @@
         const r = (a,b) => Math.floor(Math.random()*(b-a+1))+a;
         let q = "", a = 0;
         switch(S.mode) {
-          // -- JUNIOR MODE: ADD ONLY, MAX SUM 10 --
+          // -- JUNIOR MODE --
           case 'junior':
-            // Result must be <= 10.
             const total = r(2, 10); 
             const part1 = r(1, total - 1);
             const part2 = total - part1;
-            q = `${part1} + ${part2}`;
-            a = total;
+            q = `${part1} + ${part2}`; a = total;
             break;
+            
+          // -- PLACEMENT MODE --
+          case 'place':
+             // Generate distinct 3-digit number to avoid ambiguity (e.g. 555)
+             let pNum, pStr, unique = false;
+             while(!unique){
+                pNum = r(100, 999); pStr = pNum.toString();
+                if(pStr[0]!==pStr[1] && pStr[1]!==pStr[2] && pStr[0]!==pStr[2]) unique = true;
+             }
+             const pPos = r(0, 2); // 0=H, 1=T, 2=U
+             const pDigit = pStr[pPos];
+             q = `Value of ${pDigit} in ${pNum}?`;
+             if(pPos === 0) a = parseInt(pDigit) * 100;
+             else if(pPos === 1) a = parseInt(pDigit) * 10;
+             else a = parseInt(pDigit);
+             break;
 
           case 'add': let x1=r(2,20), y1=r(2,20); q=`${x1} + ${y1}`; a=x1+y1; break;
           case 'sub': let x2=r(5,30), y2=r(1,20); if(y2>x2)[x2,y2]=[y2,x2]; q=`${x2} - ${y2}`; a=x2-y2; break;
