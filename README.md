@@ -1,176 +1,61 @@
-# 🎯 Maths Challenge!
+Super Maths Challenge 3.7 🐼🦁
 
-A beautiful, interactive timed mathematics practice game with progressive stages and real-time feedback. Perfect for students of all ages to sharpen their mental math skills.
+**Super Maths Challenge** is a polished, gamified, single-file web application designed to help users practice various mathematics skills ranging from basic arithmetic to simple algebra. It features a responsive design, sound effects, visual feedback, and a persistent high-score system.
 
-![Version](https://img.shields.io/badge/version-1.0.0-blue.svg)
-![License](https://img.shields.io/badge/license-MIT-green.svg)
+## 🌟 Key Features
 
-## ✨ Features
+* **Zero Dependencies:** The entire game runs from a single HTML file. No external libraries, images, or audio files are required (Audio is synthesized via the Web Audio API).
+* **10 Unique Game Modes:** Covers skills from Junior level (sums to 10) to Algebra and Roots.
+* **Progressive System:**
+    * **XP & Ranks:** Level up from "Novice" to "GODLIKE."
+    * **Streaks & Multipliers:** Build streaks to earn 2x and 3x score multipliers.
+* **High Score Saving:** Best scores for every mode are saved automatically to your browser's Local Storage.
+* **Visual Polish:** Includes particle backgrounds, confetti effects, mascot animations, and smooth transitions.
+* **Theme Support:** Toggle between Dark (default) and Light modes.
+* **Input Support:** Play using mouse click, touch (mobile), or keyboard number keys (1-4).
 
-### 🎮 Game Modes
-- **🐣 Tiny** - Addition & Subtraction (1-6)
-- **🌟 Number** - Addition & Subtraction (1-10)
-- **💪 Brain** - Add/Sub, Multiplication, Fractions, Place Value
-- **🍕 Fractions & Decimals** - Comprehensive fraction operations
-- **🦸 Hero** - Advanced Multiplication & Division
-- **🧠 Genius** - All Operations, Algebra, Powers & Roots
+## 🚀 How to Run
 
-### 📊 Progress Tracking
-- **Stage System** - Complete 5 correct answers to advance a stage
-- **Visual Progress Bar** - Track progress toward the next stage in real-time
-- **Streak Counter** - Track consecutive correct answers
-- **Accuracy Metrics** - Real-time percentage tracking
-- **Persistent Stats** - Best streak and total problems solved saved locally
+1.  **Download:** Save the file `maths_challenge_core_progressbar (3).html` to your computer.
+2.  **Open:** Double-click the file to open it in any modern web browser (Chrome, Firefox, Safari, Edge).
+3.  **Play:** No internet connection is required (except to load the Google Font, though it falls back gracefully if offline).
 
-### 🎨 User Experience
-- **Dark Theme** - Easy on the eyes with a modern gradient background
-- **Responsive Design** - Works seamlessly on desktop, tablet, and mobile
-- **Animations** - Confetti celebrations, pulse effects, and smooth transitions
-- **Sound Effects** - Optional audio feedback (can be toggled)
-- **Accessibility** - ARIA labels, keyboard shortcuts, and reduced motion support
+## 🎮 Game Modes
 
-### ⌨️ Keyboard Shortcuts
-- **1-4** - Select answer choice
-- **Space/Enter** - Start/Resume game
-- **P** - Pause/Resume
-- **R** - Reset game
+1.  **🐣 Junior:** Simple addition sums totaling 10.
+2.  **🔢 Placement:** Identify the value of a specific digit (Place Value).
+3.  **➕ Addition:** Standard addition problems.
+4.  **➖ Subtraction:** Standard subtraction problems.
+5.  **✖ Multiplication:** Times tables practice (2-9).
+6.  **➗ Division:** Basic division facts.
+7.  **🍕 Fractions:** Calculate fractions of amounts.
+8.  **💪 Powers:** Squares ($x^2$) and Cubes ($x^3$).
+9.  **🌱 Roots:** Square roots of perfect squares.
+10. **🧠 Algebra:** Solve for $x$ in simple equations (e.g., $x + 5 = 12$).
 
-### ⏱️ Timer Options
-Choose from 1, 2, 3, 4, or 5-minute timed challenges
+## 🕹 Controls
 
-## 🚀 Getting Started
+* **Mouse/Touch:** Click the answer buttons on the screen.
+* **Keyboard:** Press keys `1`, `2`, `3`, or `4` to select the corresponding answer (Top-Left is 1, Top-Right is 2, Bottom-Left is 3, Bottom-Right is 4).
+* **Menu:**
+    * Select an **Avatar** to play as.
+    * Choose a **Mission** (Game Mode).
+    * Select a **Time Limit** (1, 2, or 5 minutes).
 
-### Prerequisites
-- A modern web browser (Chrome, Firefox, Safari, Edge)
-- No build tools or dependencies required!
+## 🛠 Technical Details
 
-### Installation
-
-1. Clone the repository:
-```bash
-git clone https://github.com/yourusername/maths-challenge.git
-cd maths-challenge
-```
-
-2. Open the HTML file:
-```bash
-# Simply open in your browser
-open maths_challenge_core_progressbar.html
-
-# Or use a local server (optional)
-python -m http.server 8000
-# Then navigate to http://localhost:8000
-```
-
-That's it! The app is a single self-contained HTML file with no external dependencies.
-
-## 🎓 How to Play
-
-1. **Select a Mode** - Choose your difficulty and question type
-2. **Set Timer** - Pick your challenge duration (1-5 minutes)
-3. **Start** - Click "Start" or press Space/Enter
-4. **Answer Questions** - Click answers or use number keys 1-4
-5. **Complete Stages** - Get 5 correct answers to complete each stage
-6. **Track Progress** - Watch your streak, accuracy, and stage count grow!
-
-## 🏗️ Technical Details
-
-### Built With
-- **Vanilla JavaScript** - No frameworks, pure performance
-- **CSS3** - Modern animations and responsive design
-- **Web Audio API** - Optional sound effects
-- **LocalStorage API** - Persistent statistics
-
-### Browser Support
-- Chrome/Edge 90+
-- Firefox 88+
-- Safari 14+
-- Mobile browsers (iOS Safari, Chrome Mobile)
-
-### File Structure
-```
-maths-challenge/
-├── maths_challenge_core_progressbar.html  # Single-file app
-└── README.md                              # This file
-```
+* **Tech Stack:** HTML5, CSS3, Vanilla JavaScript (ES6+).
+* **Audio:** Custom-built `AudioSys` object uses the Web Audio API to generate oscillators for sound effects (correct, wrong, level up, tick) without needing `.mp3` or `.wav` assets.
+* **Storage:** Uses `localStorage` key `'superMathsScoresV2'` to store high scores.
+* **Responsiveness:** CSS Grid and Flexbox are used to ensure the layout adapts to mobile phones, tablets, and desktops.
+* **Design System:** Uses CSS Variables (`:root`) for easy theming and color management.
 
 ## 🎨 Customization
 
-The app uses CSS custom properties for easy theming. Edit the `:root` section:
+To modify the game, open the file in a text editor (like VS Code or Notepad++).
 
-```css
-:root {
-  --bg: #0f1220;          /* Background */
-  --panel: #161a2e;       /* Panel background */
-  --ink: #e7eaf6;         /* Text color */
-  --accent: #4cd27d;      /* Success color */
-  --accent-2: #4ca3ff;    /* Info color */
-  --danger: #ff5d6c;      /* Error color */
-}
-```
+* **Change Colors:** Edit the `:root` variables in the `<style>` section (e.g., `--primary`, `--bg-dark`).
+* **Adjust Difficulty:** Look for the `generateQ()` function in the `<script>` tag. You can change the number ranges (e.g., change `r(2, 10)` to `r(2, 100)` for harder math).
+* **Edit Ranks:** Modify the `RANKS` array in the JavaScript section to change titles or score thresholds.
 
-## 🤝 Contributing
-
-Contributions are welcome! Here are some ways you can help:
-
-1. Report bugs or suggest features via [Issues](https://github.com/yourusername/maths-challenge/issues)
-2. Submit pull requests with improvements
-3. Share feedback on user experience
-4. Add new question types or game modes
-
-### Development Guidelines
-- Maintain the single-file architecture
-- Test on multiple browsers and devices
-- Follow existing code style and conventions
-- Ensure accessibility features remain intact
-
-## 📝 License
-
-Copyright © HRZNS  
-Contact: michael@hrzns.com.au
-
-This project is licensed under the MIT License - see below:
-
-```
-MIT License
-
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in all
-copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
-```
-
-## 🎯 Roadmap
-
-- [ ] Multiplayer mode
-- [ ] Custom question sets
-- [ ] Export statistics
-- [ ] Leaderboards
-- [ ] More question categories (geometry, word problems)
-- [ ] Practice mode (no timer)
-- [ ] Difficulty auto-adjustment
-
-## 💬 Support
-
-For questions, issues, or feedback:
-- Email: michael@hrzns.com.au
-- GitHub Issues: [Create an issue](https://github.com/yourusername/maths-challenge/issues)
-
-## 🙏 Acknowledgments
-
-- Inspired by classic mental math games
-- Built with modern web standards
-- Designed for accessibility and performance
-
----
-
-**Made with ❤️ by HRZNS** | [michael@hrzns.com.au](mailto:michael@hrzns.com.au)
+***
