@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
-  <title>Super Maths Challenge 3.7</title>
+  <title>Super Maths Challenge 4.0</title>
   <meta name="color-scheme" content="dark light">
   
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -29,6 +29,12 @@
       --danger: #ff5d6c;
       --warning: #ffcd38;
       --purple: #a78bfa;
+      
+      /* LEVELS */
+      --lvl1: #00d26a; /* Green */
+      --lvl2: #4e8cff; /* Blue */
+      --lvl3: #a78bfa; /* Purple */
+      --lvl4: #ff5d6c; /* Red */
       
       /* DEFAULT (DARK) */
       --bg: var(--bg-dark);
@@ -175,10 +181,10 @@
     @keyframes mascotShake { 0%{transform:translateX(0)} 25%{transform:translateX(-15px) rotate(-10deg)} 75%{transform:translateX(15px) rotate(10deg)} 100%{transform:translateX(0)} }
 
     .question-text {
-      font-size: clamp(40px, 10vw, 90px);
+      font-size: clamp(40px, 10vw, 80px);
       font-weight: 700; margin: 20px 0;
       text-shadow: 4px 4px 0 rgba(0,0,0,0.1);
-      line-height: 1;
+      line-height: 1.1; text-align: center;
     }
 
     .answers-grid {
@@ -195,13 +201,6 @@
     button.answer-btn:hover { transform: translateY(-2px); border-bottom-width: 8px; border-color: var(--primary); }
     button.answer-btn:active { transform: translateY(4px); border-bottom-width: 2px; }
     
-    button.answer-btn::before {
-      content: attr(data-key);
-      position: absolute; top: 8px; left: 8px;
-      font-size: 12px; color: var(--muted); opacity: 0.5; font-weight: 600; border: 1px solid var(--muted);
-      border-radius: 4px; padding: 2px 6px;
-    }
-
     button.answer-btn.correct { background: var(--success); color: white; border-color: #00b059; }
     button.answer-btn.wrong { background: var(--danger); color: white; border-color: #d1414e; }
 
@@ -242,13 +241,23 @@
     }
     .avatar-option.selected { background: var(--primary); border-color: var(--primary); transform: scale(1.15); }
 
-    .time-selector { display: flex; justify-content: center; gap: 10px; margin-bottom: 20px; }
-    .time-btn {
-      background: var(--panel); border: 2px solid var(--border); padding: 8px 16px;
-      border-radius: 99px; font-weight: 700; color: var(--muted); cursor: pointer; transition: 0.2s; font-family: var(--font-stack);
+    /* LEVEL TABS */
+    .level-tabs {
+      display: flex; gap: 8px; justify-content: center; margin-bottom: 16px; flex-wrap: wrap;
     }
-    .time-btn:hover { border-color: var(--primary); }
-    .time-btn.selected { background: var(--primary); color: white; border-color: var(--primary); transform: scale(1.05); }
+    .lvl-tab {
+      background: var(--panel); border: 2px solid var(--border);
+      padding: 8px 16px; border-radius: 12px; font-weight: 700; cursor: pointer;
+      font-size: 14px; opacity: 0.6; transition: 0.2s;
+      flex: 1; min-width: 80px; max-width: 140px;
+    }
+    .lvl-tab:hover { opacity: 0.8; transform: translateY(-2px); }
+    .lvl-tab.active { opacity: 1; color: white; border-color: transparent; transform: scale(1.05); box-shadow: 0 4px 12px rgba(0,0,0,0.2); }
+    
+    .lvl-tab[data-lvl="1"].active { background: var(--lvl1); }
+    .lvl-tab[data-lvl="2"].active { background: var(--lvl2); }
+    .lvl-tab[data-lvl="3"].active { background: var(--lvl3); }
+    .lvl-tab[data-lvl="4"].active { background: var(--lvl4); }
 
     .mission-grid {
       display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 12px; margin-bottom: 10px;
@@ -258,15 +267,31 @@
       cursor: pointer; display: flex; flex-direction: column; align-items: center; justify-content: center;
       gap: 8px; aspect-ratio: 1.1; transition: all 0.2s cubic-bezier(0.25, 0.8, 0.25, 1); position: relative;
     }
-    .mission-card:hover { transform: translateY(-3px); border-color: var(--primary); }
-    .mission-card.selected { border-color: var(--success); background: rgba(0, 210, 106, 0.05); box-shadow: 0 0 0 2px var(--success) inset; }
+    .mission-card.hidden { display: none; }
+    .mission-card:hover { transform: translateY(-3px); border-color: var(--muted); }
     
+    /* Active States per level */
+    .mission-card.selected { background: rgba(255,255,255,0.05); box-shadow: 0 0 0 2px currentColor inset; }
+    
+    [data-lvl-active="1"] .mission-card.selected { border-color: var(--lvl1); color: var(--lvl1); }
+    [data-lvl-active="2"] .mission-card.selected { border-color: var(--lvl2); color: var(--lvl2); }
+    [data-lvl-active="3"] .mission-card.selected { border-color: var(--lvl3); color: var(--lvl3); }
+    [data-lvl-active="4"] .mission-card.selected { border-color: var(--lvl4); color: var(--lvl4); }
+
     .mission-icon { font-size: 32px; display: block; line-height: 1; }
-    .mission-title { font-size: 16px; font-weight: 700; color: var(--text); }
+    .mission-title { font-size: 15px; font-weight: 700; color: var(--text); }
     .high-score-label {
       font-size: 11px; color: var(--muted); font-weight: 700; background: rgba(0,0,0,0.05); padding: 4px 8px; border-radius: 10px; white-space: nowrap;
     }
     [data-theme='dark'] .high-score-label { background: rgba(255,255,255,0.05); }
+
+    .time-selector { display: flex; justify-content: center; gap: 10px; margin-bottom: 20px; }
+    .time-btn {
+      background: var(--panel); border: 2px solid var(--border); padding: 8px 16px;
+      border-radius: 99px; font-weight: 700; color: var(--muted); cursor: pointer; transition: 0.2s; font-family: var(--font-stack);
+    }
+    .time-btn:hover { border-color: var(--primary); }
+    .time-btn.selected { background: var(--primary); color: white; border-color: var(--primary); transform: scale(1.05); }
 
     /* BUTTONS */
     .btn-lg {
@@ -310,6 +335,8 @@
     @media (max-width: 600px) {
       .answers-grid { grid-template-columns: 1fr; }
       .question-text { font-size: 50px; }
+      .level-tabs { gap: 4px; }
+      .lvl-tab { padding: 6px 10px; font-size: 12px; }
     }
   </style>
 </head>
@@ -323,7 +350,6 @@
     
     <div class="flash-overlay" id="flashOverlay"></div>
     <div class="effects-layer" id="effectsLayer"></div>
-    
     <div class="countdown-overlay" id="countdownOverlay"></div>
 
     <header>
@@ -357,7 +383,7 @@
 
     <div class="overlay-screen" id="welcomeScreen">
       <div class="screen-content">
-        <h1 style="color:var(--primary); margin-top:20px;">Super Maths 3.7</h1>
+        <h1 style="color:var(--primary); margin-top:20px;">Super Maths 4.0</h1>
         <p style="color:var(--muted)">Use Mouse or Keyboard (1-4)</p>
 
         <h3>1. Pick Hero</h3>
@@ -371,40 +397,71 @@
         </div>
 
         <h3>2. Pick Mission</h3>
-        <div class="mission-grid" id="missionSelector">
+        
+        <div class="level-tabs" id="levelTabs">
+          <div class="lvl-tab active" data-lvl="1">Mini</div>
+          <div class="lvl-tab" data-lvl="2">Junior</div>
+          <div class="lvl-tab" data-lvl="3">Senior</div>
+          <div class="lvl-tab" data-lvl="4">High School</div>
+        </div>
+
+        <div class="mission-grid" id="missionSelector" data-lvl-active="1">
           
-          <div class="mission-card selected" data-mode="junior">
-            <span class="mission-icon">🐣</span><span class="mission-title">Junior (Sum 10)</span><span class="high-score-label" id="hs-junior">Best: 0</span>
+          <div class="mission-card selected" data-level="1" data-mode="l1_add">
+            <span class="mission-icon">🐣</span><span class="mission-title">Sum to 10</span><span class="high-score-label">Best: 0</span>
           </div>
-          
-          <div class="mission-card" data-mode="place">
-            <span class="mission-icon">🔢</span><span class="mission-title">Placement</span><span class="high-score-label" id="hs-place">Best: 0</span>
+          <div class="mission-card" data-level="1" data-mode="l1_sub">
+            <span class="mission-icon">➖</span><span class="mission-title">Take Away 10</span><span class="high-score-label">Best: 0</span>
           </div>
 
-          <div class="mission-card" data-mode="add">
-            <span class="mission-icon">➕</span><span class="mission-title">Addition</span><span class="high-score-label" id="hs-add">Best: 0</span>
+          <div class="mission-card" data-level="2" data-mode="l2_add">
+            <span class="mission-icon">➕</span><span class="mission-title">Double Digits</span><span class="high-score-label">Best: 0</span>
           </div>
-          <div class="mission-card" data-mode="sub">
-            <span class="mission-icon">➖</span><span class="mission-title">Subtraction</span><span class="high-score-label" id="hs-sub">Best: 0</span>
+          <div class="mission-card" data-level="2" data-mode="l2_sub">
+            <span class="mission-icon">➖</span><span class="mission-title">Subtraction</span><span class="high-score-label">Best: 0</span>
           </div>
-          <div class="mission-card" data-mode="mul">
-            <span class="mission-icon">✖</span><span class="mission-title">Multiply</span><span class="high-score-label" id="hs-mul">Best: 0</span>
+          <div class="mission-card" data-level="2" data-mode="l2_mul">
+            <span class="mission-icon">✖</span><span class="mission-title">Times Tables</span><span class="high-score-label">Best: 0</span>
           </div>
-          <div class="mission-card" data-mode="div">
-            <span class="mission-icon">➗</span><span class="mission-title">Division</span><span class="high-score-label" id="hs-div">Best: 0</span>
+          <div class="mission-card" data-level="2" data-mode="l2_place">
+            <span class="mission-icon">🔢</span><span class="mission-title">Place Value</span><span class="high-score-label">Best: 0</span>
           </div>
-          <div class="mission-card" data-mode="fraction">
-            <span class="mission-icon">🍕</span><span class="mission-title">Fractions</span><span class="high-score-label" id="hs-fraction">Best: 0</span>
+
+          <div class="mission-card" data-level="3" data-mode="l3_add">
+            <span class="mission-icon">➕</span><span class="mission-title">3-Digit Add</span><span class="high-score-label">Best: 0</span>
           </div>
-          <div class="mission-card" data-mode="power">
-            <span class="mission-icon">💪</span><span class="mission-title">Powers</span><span class="high-score-label" id="hs-power">Best: 0</span>
+          <div class="mission-card" data-level="3" data-mode="l3_sub">
+            <span class="mission-icon">➖</span><span class="mission-title">3-Digit Sub</span><span class="high-score-label">Best: 0</span>
           </div>
-          <div class="mission-card" data-mode="root">
-            <span class="mission-icon">🌱</span><span class="mission-title">Roots</span><span class="high-score-label" id="hs-root">Best: 0</span>
+          <div class="mission-card" data-level="3" data-mode="l3_mul">
+            <span class="mission-icon">✖</span><span class="mission-title">Big Multiply</span><span class="high-score-label">Best: 0</span>
           </div>
-          <div class="mission-card" data-mode="algebra">
-            <span class="mission-icon">🧠</span><span class="mission-title">Algebra</span><span class="high-score-label" id="hs-algebra">Best: 0</span>
+          <div class="mission-card" data-level="3" data-mode="l3_div">
+            <span class="mission-icon">➗</span><span class="mission-title">Division</span><span class="high-score-label">Best: 0</span>
           </div>
+          <div class="mission-card" data-level="3" data-mode="l3_power">
+            <span class="mission-icon">⚡</span><span class="mission-title">Powers</span><span class="high-score-label">Best: 0</span>
+          </div>
+          <div class="mission-card" data-level="3" data-mode="l3_root">
+            <span class="mission-icon">🌱</span><span class="mission-title">Roots</span><span class="high-score-label">Best: 0</span>
+          </div>
+          <div class="mission-card" data-level="3" data-mode="l3_alg">
+            <span class="mission-icon">🧩</span><span class="mission-title">Algebra I</span><span class="high-score-label">Best: 0</span>
+          </div>
+
+          <div class="mission-card" data-level="4" data-mode="l4_int">
+            <span class="mission-icon">❄️</span><span class="mission-title">Integers</span><span class="high-score-label">Best: 0</span>
+          </div>
+          <div class="mission-card" data-level="4" data-mode="l4_bod">
+            <span class="mission-icon">🏗️</span><span class="mission-title">BODMAS</span><span class="high-score-label">Best: 0</span>
+          </div>
+          <div class="mission-card" data-level="4" data-mode="l4_pct">
+            <span class="mission-icon">💯</span><span class="mission-title">Percentage</span><span class="high-score-label">Best: 0</span>
+          </div>
+          <div class="mission-card" data-level="4" data-mode="l4_alg">
+            <span class="mission-icon">🧠</span><span class="mission-title">Algebra II</span><span class="high-score-label">Best: 0</span>
+          </div>
+
         </div>
 
         <h3>3. Mission Time</h3>
@@ -439,7 +496,7 @@
   </div>
 
   <script>
-    /* ================= GAME ENGINE 3.7 ================= */
+    /* ================= GAME ENGINE 4.0 ================= */
     (function(){
       // -- STATE & CONFIG --
       const S = {
@@ -448,12 +505,12 @@
         endTime: 0,
         score: 0,
         streak: 0,
-        mode: 'junior', // Default to new mode
+        mode: 'l1_add', // Default
+        currentLevel: 1,
         avatar: '🐼',
         sound: true,
         multiplier: 1,
-        highScores: JSON.parse(localStorage.getItem('superMathsScoresV2')) || 
-                    { junior:0, place:0, add:0, sub:0, mul:0, div:0, fraction:0, power:0, root:0, algebra:0 },
+        highScores: JSON.parse(localStorage.getItem('superMathsScoresV4')) || {},
         rankTitle: 'Novice',
         rankScore: 0
       };
@@ -483,8 +540,10 @@
         effects: $('#effectsLayer'),
         flash: $('#flashOverlay'),
         missionCards: $$('.mission-card'),
+        lvlTabs: $$('.lvl-tab'),
         timeBtns: $$('.time-btn'),
-        countdown: $('#countdownOverlay')
+        countdown: $('#countdownOverlay'),
+        missionGrid: $('#missionSelector')
       };
 
       // -- AUDIO ENGINE --
@@ -552,13 +611,34 @@
         setTimeout(() => el.flash.style.opacity = '0', 200);
       }
 
-      // -- GAME LOGIC --
+      // -- LOGIC --
       function updateHighScoresDisplay(){
         el.missionCards.forEach(card => {
            const m = card.dataset.mode;
            const label = card.querySelector('.high-score-label');
-           if(label && S.highScores[m] !== undefined) label.textContent = `Best: ${S.highScores[m]}`;
+           const sc = S.highScores[m] || 0;
+           if(label) label.textContent = `Best: ${sc}`;
         });
+      }
+
+      function filterMissions(lvl){
+        S.currentLevel = parseInt(lvl);
+        el.lvlTabs.forEach(t => {
+            if(parseInt(t.dataset.lvl) === S.currentLevel) t.classList.add('active');
+            else t.classList.remove('active');
+        });
+
+        // Show/Hide cards
+        el.missionCards.forEach(card => {
+            if(parseInt(card.dataset.level) === S.currentLevel) card.classList.remove('hidden');
+            else card.classList.add('hidden');
+        });
+
+        // Auto-select first visible
+        const first = Array.from(el.missionCards).find(c => parseInt(c.dataset.level) === S.currentLevel);
+        if(first) first.click();
+        
+        el.missionGrid.dataset.lvlActive = S.currentLevel;
       }
 
       function updateHUD(){
@@ -597,7 +677,6 @@
         el.xp.style.width = Math.min(100, Math.max(5, pct)) + '%';
       }
 
-      // -- COUNTDOWN SYSTEM --
       function startCountdown() {
         AudioSys.init();
         el.startScreen.classList.add('hidden');
@@ -652,7 +731,7 @@
         const oldBest = S.highScores[S.mode] || 0;
         if(S.score > oldBest){
           S.highScores[S.mode] = S.score;
-          localStorage.setItem('superMathsScoresV2', JSON.stringify(S.highScores));
+          localStorage.setItem('superMathsScoresV4', JSON.stringify(S.highScores));
           $('#newRecordMsg').textContent = "🎉 NEW RECORD! 🎉";
           AudioSys.playLevelUp();
         } else {
@@ -661,42 +740,72 @@
         updateHighScoresDisplay();
       }
 
+      // -- MATHS GENERATOR V4 --
       function generateQ(){
         const r = (a,b) => Math.floor(Math.random()*(b-a+1))+a;
         let q = "", a = 0;
-        switch(S.mode) {
-          // -- JUNIOR MODE --
-          case 'junior':
-            const total = r(2, 10); 
-            const part1 = r(1, total - 1);
-            const part2 = total - part1;
-            q = `${part1} + ${part2}`; a = total;
-            break;
-            
-          // -- PLACEMENT MODE --
-          case 'place':
-             // Generate distinct 3-digit number to avoid ambiguity (e.g. 555)
-             let pNum, pStr, unique = false;
-             while(!unique){
-                pNum = r(100, 999); pStr = pNum.toString();
-                if(pStr[0]!==pStr[1] && pStr[1]!==pStr[2] && pStr[0]!==pStr[2]) unique = true;
-             }
-             const pPos = r(0, 2); // 0=H, 1=T, 2=U
-             const pDigit = pStr[pPos];
-             q = `Value of ${pDigit} in ${pNum}?`;
-             if(pPos === 0) a = parseInt(pDigit) * 100;
-             else if(pPos === 1) a = parseInt(pDigit) * 10;
-             else a = parseInt(pDigit);
-             break;
 
-          case 'add': let x1=r(2,20), y1=r(2,20); q=`${x1} + ${y1}`; a=x1+y1; break;
-          case 'sub': let x2=r(5,30), y2=r(1,20); if(y2>x2)[x2,y2]=[y2,x2]; q=`${x2} - ${y2}`; a=x2-y2; break;
-          case 'mul': let x3=r(2,9), y3=r(2,9); q=`${x3} × ${y3}`; a=x3*y3; break;
-          case 'div': let x4=r(2,9), y4=r(2,9), p4=x4*y4; q=`${p4} ÷ ${x4}`; a=y4; break;
-          case 'fraction': const d = r(2, 5); const ans = r(2, 10); q = `1/${d} of ${ans*d}`; a = ans; break;
-          case 'power': const b = r(2, 10); if(Math.random()>0.3){q=`${b}²`;a=b*b;}else{const b2=r(2,4);q=`${b2}³`;a=b2*b2*b2;} break;
-          case 'root': const rt = r(2, 12); q = `√${rt*rt}`; a = rt; break;
-          case 'algebra': const x = r(2, 10), add = r(1, 15); q = `x + ${add} = ${x+add}`; a = x; break;
+        switch(S.mode) {
+          /* LEVEL 1: MINI */
+          case 'l1_add': { const t=r(2,10); const p1=r(1,t-1); q=`${p1} + ${t-p1}`; a=t; break; }
+          case 'l1_sub': { const x=r(2,10), y=r(1,x); q=`${x} - ${y}`; a=x-y; break; }
+
+          /* LEVEL 2: JUNIOR */
+          case 'l2_add': { const n1=r(5,25), n2=r(5,25); q=`${n1} + ${n2}`; a=n1+n2; break; }
+          case 'l2_sub': { const top=r(15,50), bot=r(5,top-5); q=`${top} - ${bot}`; a=top-bot; break; }
+          case 'l2_mul': { 
+             const tables=[2,3,5,10]; const t2=tables[r(0,3)]; const m2=r(1,10); 
+             q=`${t2} × ${m2}`; a=t2*m2; break; 
+          }
+          case 'l2_place': {
+             const v=r(100,999).toString(); const pos=r(0,2); //0=H,1=T,2=U
+             // Ensure digits unique enough to not be confusing?
+             // Simple version:
+             q = `Value of ${v[pos]} in ${v}?`;
+             if(pos===0) a=parseInt(v[0])*100;
+             else if(pos===1) a=parseInt(v[1])*10;
+             else a=parseInt(v[2]);
+             break;
+          }
+
+          /* LEVEL 3: SENIOR */
+          case 'l3_add': { const a1=r(100,500), b1=r(100,400); q=`${a1} + ${b1}`; a=a1+b1; break; }
+          case 'l3_sub': { const s1=r(300,900), s2=r(100,s1-50); q=`${s1} - ${s2}`; a=s1-s2; break; }
+          case 'l3_mul': { const m3a=r(11,20), m3b=r(2,9); q=`${m3a} × ${m3b}`; a=m3a*m3b; break; }
+          case 'l3_div': { const d3=r(2,12), ans3=r(2,12); q=`${d3*ans3} ÷ ${d3}`; a=ans3; break; }
+          case 'l3_power': { if(Math.random()>0.5){const bp=r(2,12); q=`${bp}²`; a=bp*bp;} else {const bp2=r(1,5); q=`${bp2}³`; a=bp2**3;} break; }
+          case 'l3_root': { const rt=r(2,12); q=`√${rt*rt}`; a=rt; break; }
+          case 'l3_alg': { const x=r(2,12), add=r(1,20); q=`x + ${add} = ${x+add}`; a=x; break; }
+
+          /* LEVEL 4: HIGH SCHOOL */
+          case 'l4_int': { 
+             const ia=r(1,10), ib=r(1,10);
+             if(Math.random()>0.5){ q=`${ia} - ${ia+ib}`; a=-ib; } // 5 - 8 = -3
+             else { q=`-${ia} + ${ib}`; a=ib-ia; } // -2 + 5 = 3
+             break; 
+          }
+          case 'l4_bod': {
+             const b1=r(2,5), b2=r(2,5), b3=r(2,5);
+             q = `${b1} + ${b2} × ${b3}`; a = b1 + (b2*b3);
+             break;
+          }
+          case 'l4_pct': {
+             // Simple percents: 10, 20, 25, 50%
+             const pcts=[10,20,25,50]; const pc=pcts[r(0,3)];
+             let base=0;
+             if(pc===10) base=r(1,10)*10; 
+             else if(pc===25) base=r(1,10)*4;
+             else if(pc===50) base=r(2,20)*2;
+             else base=r(1,5)*10; // 20%
+             q=`${pc}% of ${base}`; a=(pc/100)*base;
+             break;
+          }
+          case 'l4_alg': {
+             // 2x + 3 = 13
+             const x=r(2,10), m=r(2,5), c=r(1,10);
+             q=`${m}x + ${c} = ${m*x+c}`; a=x;
+             break;
+          }
         }
         return {q, a};
       }
@@ -704,11 +813,16 @@
       function nextQuestion(){
         const {q, a} = generateQ();
         el.qText.textContent = q;
+        
         let opts = new Set([a]);
-        let range = (a > 50) ? 15 : 5;
+        // Adaptive distraction range based on magnitude of answer
+        let range = 5;
+        if(Math.abs(a) > 20) range = 10;
+        if(Math.abs(a) > 100) range = 30;
+
         while(opts.size < 4) {
           let v = a + Math.floor(Math.random() * (range*2)) - range; 
-          if(v >= 0 && v!==a) opts.add(v);
+          if(v!==a) opts.add(v);
         }
         const arr = Array.from(opts).sort(()=>Math.random()-0.5);
         el.answers.innerHTML = '';
@@ -755,6 +869,14 @@
         };
       });
 
+      // Tab Filtering
+      el.lvlTabs.forEach(tab => {
+        tab.onclick = () => {
+            filterMissions(tab.dataset.lvl);
+            AudioSys.playTone(400, 'sine', 0.05);
+        };
+      });
+
       el.missionCards.forEach(card => {
         card.onclick = () => {
           el.missionCards.forEach(c=>c.classList.remove('selected'));
@@ -769,7 +891,6 @@
         };
       });
 
-      // BUTTON HANDLERS
       $('#startBtn').onclick = startCountdown;
       $('#playAgainBtn').onclick = startCountdown;
       
@@ -788,6 +909,8 @@
       $('#soundBtn').onclick = () => { S.sound = !S.sound; $('#soundBtn').style.opacity = S.sound ? '1' : '0.3'; };
       $('#themeToggle').onchange = (e) => { document.body.dataset.theme = e.target.checked ? 'light' : 'dark'; };
 
+      // Init
+      filterMissions(1);
       updateHighScoresDisplay();
     })();
   </script>
